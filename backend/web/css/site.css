@@ -1,0 +1,164 @@
+/*
+ * Base structure
+ */
+
+/* Move down content because we have a fixed navbar that is 50px tall */
+body {
+    padding-top: 50px;
+    background-color: #ededed;
+}
+
+
+/*
+ * Global add-ons
+ */
+
+.sub-header {
+    padding-bottom: 10px;
+    border-bottom: 1px solid #eee;
+}
+
+/*
+ * Top navigation
+ * Hide default border to remove 1px line.
+ */
+.navbar-fixed-top {
+    border: 0;
+}
+
+/*
+ * Sidebar
+ */
+
+/* Hide for mobile, show later */
+.sidebar {
+    display: none;
+}
+@media (min-width: 768px) {
+    .sidebar {
+        position: fixed;
+        top: 50px;
+        bottom: 0;
+        left: 0;
+        z-index: 1000;
+        display: block;
+        padding: 20px;
+        overflow-x: hidden;
+        overflow-y: auto; /* Scrollable contents if viewport is shorter than content. */
+        background-color: #fff;
+        border-right: 1px solid #eee;
+    }
+}
+
+/* Sidebar navigation */
+.nav-sidebar {
+    margin-right: -21px; /* 20px padding + 1px border */
+    margin-bottom: 20px;
+    margin-left: -20px;
+}
+.nav-sidebar > li > a {
+    padding-right: 20px;
+    padding-left: 20px;
+}
+.nav-sidebar > .active > a,
+.nav-sidebar > .active > a:hover,
+.nav-sidebar > .active > a:focus {
+    color: #fff;
+    background-color: #428bca;
+}
+
+
+/*
+ * Main content
+ */
+
+.main {
+    padding: 20px;
+}
+.main .page-header {
+    margin-top: 0;
+}
+
+
+/*
+ * Placeholder dashboard ideas
+ */
+
+.placeholders {
+    margin-bottom: 30px;
+    text-align: center;
+}
+.placeholders h4 {
+    margin-bottom: 0;
+}
+.placeholder {
+    margin-bottom: 20px;
+}
+.placeholder img {
+    display: inline-block;
+    border-radius: 50%;
+}
+
+.panel-admin {
+    background-color: #fff;
+    border: 1px solid #f5f5f5;
+}
+
+.content .page-header h1,
+.content .page-header .h1,
+.content .page-header h2,
+.content .page-header .h2,
+.content .page-header h3,
+.content .page-header .h3,
+.content .page-header h4,
+.content .page-header .h4,
+.content .page-header h5,
+.content .page-header .h5,
+.content .page-header h6,
+.content .page-header .h6 {margin: 0;}
+.content .page-header small .btn-xs {margin-bottom: 7px;}
+
+hr {margin-top: 15px; margin-bottom: 15px;}
+
+/*modal*/
+.eff-modal {top: 20vh;}
+.eff-modal .modal-header {border-bottom: none;}
+.eff-modal .close {margin-right: 6px;}
+.loading-indicator {text-align: center; margin: 5px 0;}
+
+/*module*/
+.medias .media hr{margin: 10px 0;}
+.medias .media h5 span.label {margin-left: 5px;}
+.medias .media .media-left {vertical-align: middle;}
+.medias .media .media-left .media-object {width: 50px; overflow: hidden;}
+
+/*form-control*/
+.form-control {border-radius: 0; height: 40px; transition: none; box-shadow: none; -webkit-transition: none; -webkit-box-shadow: none;}
+
+/*radio list*/
+.radio-list label {display: block;}
+
+/*panel*/
+.panel {box-shadow:none; -webkit-box-shadow: none; border-radius: 0;}
+.panel-post .panel-heading {border-bottom: none;}
+.panel-post .panel-heading a {text-decoration: none; color: #333;}
+.panel-post .panel-heading a span.glyphicon-menu-up {display: block; line-height: 18px;}
+.panel-post .panel-heading a span.glyphicon-menu-down {display: none; line-height: 18px;}
+.panel-post .panel-heading a.collapsed span.glyphicon-menu-up {display: none;}
+.panel-post .panel-heading a.collapsed span.glyphicon-menu-down {display: block;}
+.panel-post .panel-heading a.published-status span{vertical-align: middle; line-height: 32px;}
+.panel-post .panel-heading span.save-buttons a.btn-success, .panel-post .panel-heading span.save-buttons a.btn-warning {color: #fff}
+.panel-post .collapse.in, .panel-post .collapsing {border-top: 1px solid #ddd;}
+
+/*font and text*/
+.text-normal {font-weight: normal;}
+
+/*post form*/
+.post-form {}
+.post-form .radio-save-status {margin-top: 0;}
+.post-form .panel .panel-heading a.header-text {text-transform: uppercase;}
+.post-form .slug {font-style: italic; color: #333;}
+.post-form .featured-image-select {text-align: center}
+.post-form .featured-image-select a {display: block; margin-bottom: 15px; }
+.post-form .featured-image-select a:hover, .featured-image-select a:active {text-decoration: none;}
+.post-form .featured-image-select a .glyphicon-picture { cursor: pointer; font-size: 46px; color: #ccc}

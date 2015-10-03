@@ -1,0 +1,11 @@
+{
+  "id": "breaking_news",
+  "name": "Breaking News",
+  "class": "marketplace\\modules\\breaking_news\\Module",
+  "isCore": false,
+  "description": "Breaking News Module",
+  "keywords": [
+    "breaking news"
+  ],
+  "version": "1.0.0"
+}

@@ -1,0 +1,4 @@
+.redactor-toolbar {height: 40px; box-shadow: none; border: 1px solid #ccc;}
+.redactor-toolbar li a {padding: 12px 10px;}
+.redactor-toolbar li:first-child a {margin-left: 4px;}
+.redactor-editor {border: 1px solid #ccc; border-top: 0;}

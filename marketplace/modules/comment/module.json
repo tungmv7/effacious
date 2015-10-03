@@ -1,0 +1,11 @@
+{
+  "id": "comment",
+  "name": "Comment",
+  "class": "marketplace\\modules\\comment\\Module",
+  "isCore": false,
+  "description": "Comment Module",
+  "keywords": [
+    "comment"
+  ],
+  "version": "1.0.0"
+}

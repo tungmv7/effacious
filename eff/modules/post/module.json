@@ -1,0 +1,11 @@
+{
+  "id": "post",
+  "name": "Post Module",
+  "class": "eff\\modules\\post\\Module",
+  "isCore": false,
+  "description": "This generator helps you to generate the skeleton code needed by a Eff module.",
+  "keywords": [
+    "post"
+  ],
+  "version": "1.0.0"
+}
