@@ -10,14 +10,8 @@ $this->title = Yii::t('post', 'Create Post');
 $this->params['breadcrumbs'][] = ['label' => Yii::t('post', 'Posts'), 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 ?>
-<div class="panel panel-default">
-    <div class="panel-heading" style="display: none;">
-        <h4>
-            <?= Html::encode($this->title) ?>
-            <small><?= Yii::t('module', 'Add new your awesome post.') ?></small>
-        </h4>
-    </div>
-    <div class="module-index content panel-body">
+<div class="panel panel-content">
+    <div class="content">
     <?= $this->render('_form', [
         'model' => $model,
     ]) ?>

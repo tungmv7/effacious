@@ -26,11 +26,14 @@ AppAsset::register($this);
 
 <?php
 NavBar::begin([
-    'brandLabel' => 'My Company',
+    'brandLabel' => 'EFI Content System',
     'brandUrl' => Yii::$app->homeUrl,
     'options' => [
         'class' => 'navbar-inverse navbar-fixed-top',
     ],
+    'innerContainerOptions' => [
+        'class' => 'container-fluid'
+    ]
 ]);
 $menuItems = [
     ['label' => 'Home', 'url' => ['/site/index']],

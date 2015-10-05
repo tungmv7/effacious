@@ -21,7 +21,7 @@ class m151002_041319_init extends Migration
             'featured_image' => $this->integer(11),
             'type' => $this->string(255)->notNull(),
             'visibility' => $this->string(255)->notNull(),
-            'password' => $this->string(255)->notNull(),
+            'password' => $this->string(255),
             'meta_data' => $this->text(),
             'seo_title' => $this->string(255),
             'seo_description' => $this->string(255),
@@ -30,7 +30,8 @@ class m151002_041319_init extends Migration
             'created_by' => $this->integer(11)->notNull(),
             'created_at' => $this->integer(11)->notNull(),
             'updated_by' => $this->integer(11)->notNull(),
-            'updated_at' => $this->integer(11)->notNull()
+            'updated_at' => $this->integer(11)->notNull(),
+            'version' => $this->bigInteger(11)->defaultValue(0)
         ], $tableOptions);
     }
 

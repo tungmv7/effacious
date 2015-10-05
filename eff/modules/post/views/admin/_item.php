@@ -8,7 +8,7 @@ echo Html::beginTag('div', ['class' => 'media-left']);
 echo Html::endTag('div');
 echo Html::beginTag('div', ['class' => 'media-body']);
 echo Html::tag('h5', $data['name']);
-echo Html::tag('p', $data['description'], ['class' => 'small']);
+echo Html::tag('p', $data['excerpt'], ['class' => 'small']);
 echo Html::beginTag('p', ['class' => 'small']);
 echo Yii::t('module', 'date');
 echo Html::endTag('p');

@@ -10,11 +10,9 @@ use \eff\components\ActiveForm;
 <div class="post-form row">
 
     <?php $form = ActiveForm::begin(); ?>
-
+    <?= $form->errorSummary($model); ?>
     <div class="col-md-8">
-
         <?php
-
         // post name
         echo $form->beginField($model, 'name');
         echo Html::activeInput('text', $model, 'name', ['class' => 'form-control', 'maxlength' => true, 'placeholder' => Yii::t('post', 'Title') . ' ...']);
@@ -44,8 +42,8 @@ use \eff\components\ActiveForm;
         <div class="panel panel-default panel-post">
             <div class="panel-heading">
                 <span class="save-buttons">
-                    <?= Html::submitButton(Yii::t('post', 'Publish Immeditaly'), ['class' => 'btn btn-success btn-submit']) ?>
-                    <?= Html::a(Yii::t('post', 'Save as Draft'), '#', ['class' => 'btn']) ?>
+                    <?= Html::submitButton(Yii::t('post', 'Publish Immediately'), ['class' => 'btn btn-success btn-submit']) ?>
+                    <?= Html::submitButton(Yii::t('post', 'Save as Draft'), ['class' => 'btn btn-link']) ?>
                 </span>
                 <a data-toggle="collapse" href="#post-published-status" class="collapsed published-status">
                     <span class="pull-right glyphicon glyphicon-menu-down" aria-hidden="true"></span>
@@ -54,10 +52,13 @@ use \eff\components\ActiveForm;
             </div>
             <div id="post-published-status" class="collapse">
                 <div class="panel-body">
+                    <?= Html::activeHiddenInput($model, 'published_at') ?>
+                    <?= Html::activeHiddenInput($model, 'status') ?>
+                    <?= Html::activeHiddenInput($model, 'version') ?>
                     <?= Html::radioList('status', $model::SAVE_OPTION_PUBLISH_IMMEDIATELY, $model::getSaveOptions(), ['class' => 'radio radio-list radio-save-status']) ?>
                     <script>
-                        $(function(){
-                            $(".radio-save-status").on('change', function(e) {
+                        $(function () {
+                            $(".radio-save-status").on('change', function (e) {
                                 var text = e.target.nextSibling.nodeValue.trim();
                                 var value = e.target.value;
                                 if (text != 'undefined' && value != 'undefained') {
@@ -104,7 +105,7 @@ use \eff\components\ActiveForm;
             </div>
             <div id="post-categories" class="collapse in">
                 <div class="panel-body">
-                    <div style="height: 20px; text-align: center; vertical-align: middle"> Category </div>
+                    <div style="height: 20px; text-align: center; vertical-align: middle"> Category</div>
                 </div>
             </div>
         </div>

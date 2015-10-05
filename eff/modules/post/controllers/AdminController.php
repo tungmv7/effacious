@@ -62,13 +62,25 @@ class AdminController extends Controller
     {
         $model = new Post();
 
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
+        if ($model->load(Yii::$app->request->post())) {
+            if (empty($model->title)) {
+                $model->title = $model->name;
+            }
+            if ($model->validate() && $model->save()) {
+                return $this->redirect(['update', 'id' => $model->id]);
+            }
         } else {
-            return $this->render('create', [
-                'model' => $model,
-            ]);
+
+            // default values
+            $model->type = 'standard';
+            $model->visibility = 'public';
+            $model->creator = 'tung';
+            $model->status = Post::STATUS_PUBLISHED;
+            $model->published_at = time();
         }
+        return $this->render('create', [
+            'model' => $model,
+        ]);
     }
 
     /**
