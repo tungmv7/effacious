@@ -11,8 +11,10 @@ namespace eff\actions;
 
 class Delete extends Action
 {
+    public $deleteType = 'softDelete';
+
     // view file
-    public $view = 'index';
+    public $redirect = ['index'];
 
     // model class
     public $modelClass;
@@ -20,19 +22,14 @@ class Delete extends Action
     public function run($id)
     {
         // get model class
-        if ($this->modelClass !== null) {
-            $modelClass = $this->modelClass;
-        } else if ($this->controller->modelClass !== null) {
-            $modelClass = $this->controller->modelClass;
-        } else {
-            throw new InvalidConfigException('The modelClass param is required.');
-        }
+        $modelClass = $this->getModelClass();
 
-        // find model data
-        $modelClass::findOne($id)->delete();
+        // delete model data
+        $deleteFunction = $this->deleteType;
+        $modelClass::findOne($id)->$deleteFunction();
 
         // render to view
-        return $this->controller->render($this->view);
+        return $this->controller->redirect($this->redirect);
 
     }
 

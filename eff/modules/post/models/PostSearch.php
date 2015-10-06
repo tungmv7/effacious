@@ -18,8 +18,8 @@ class PostSearch extends Post
     public function rules()
     {
         return [
-            [['id', 'creator', 'published_at', 'featured_image', 'created_by', 'created_at', 'updated_by', 'updated_at'], 'integer'],
-            [['name', 'title', 'excerpt', 'body', 'status', 'slug', 'type', 'visibility', 'password', 'meta_data', 'note'], 'safe'],
+            [['id', 'published_at', 'created_by', 'created_at', 'updated_by', 'updated_at', 'version', 'is_deleted'], 'integer'],
+            [['name', 'status', 'type', 'visibility', 'title', 'excerpt', 'body', 'creator', 'slug', 'featured_image', 'password', 'meta_data', 'seo_title', 'seo_description', 'seo_keywords', 'note', 'deleted_at'], 'safe'],
         ];
     }
 
@@ -47,6 +47,7 @@ class PostSearch extends Post
             'query' => $query,
         ]);
 
+        // default
         $this->load($params);
 
         if (!$this->validate()) {
@@ -57,26 +58,32 @@ class PostSearch extends Post
 
         $query->andFilterWhere([
             'id' => $this->id,
-            'creator' => $this->creator,
             'published_at' => $this->published_at,
-            'featured_image' => $this->featured_image,
             'created_by' => $this->created_by,
             'created_at' => $this->created_at,
             'updated_by' => $this->updated_by,
             'updated_at' => $this->updated_at,
+            'version' => $this->version,
+            'is_deleted' => $this->is_deleted,
         ]);
 
         $query->andFilterWhere(['like', 'name', $this->name])
+            ->andFilterWhere(['like', 'status', $this->status])
+            ->andFilterWhere(['like', 'type', $this->type])
+            ->andFilterWhere(['like', 'visibility', $this->visibility])
             ->andFilterWhere(['like', 'title', $this->title])
             ->andFilterWhere(['like', 'excerpt', $this->excerpt])
             ->andFilterWhere(['like', 'body', $this->body])
-            ->andFilterWhere(['like', 'status', $this->status])
+            ->andFilterWhere(['like', 'creator', $this->creator])
             ->andFilterWhere(['like', 'slug', $this->slug])
-            ->andFilterWhere(['like', 'type', $this->type])
-            ->andFilterWhere(['like', 'visibility', $this->visibility])
+            ->andFilterWhere(['like', 'featured_image', $this->featured_image])
             ->andFilterWhere(['like', 'password', $this->password])
             ->andFilterWhere(['like', 'meta_data', $this->meta_data])
-            ->andFilterWhere(['like', 'note', $this->note]);
+            ->andFilterWhere(['like', 'seo_title', $this->seo_title])
+            ->andFilterWhere(['like', 'seo_description', $this->seo_description])
+            ->andFilterWhere(['like', 'seo_keywords', $this->seo_keywords])
+            ->andFilterWhere(['like', 'note', $this->note])
+            ->andFilterWhere(['like', 'deleted_at', $this->deleted_at]);
 
         return $dataProvider;
     }

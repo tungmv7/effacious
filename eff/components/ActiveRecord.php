@@ -1,15 +1,7 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: tungmangvien
- * Date: 10/2/15
- * Time: 12:01 PM
- */
-
 namespace eff\components;
 
 use eff\behaviors\SoftDeleteBehavior;
-use yii\behaviors\AttributeBehavior;
 use \eff\validators\OptimisticLockValidator;
 
 class ActiveRecord extends \yii\db\ActiveRecord
@@ -24,19 +16,17 @@ class ActiveRecord extends \yii\db\ActiveRecord
     public function behaviors()
     {
         return [
-            [
-                'class' => AttributeBehavior::className(),
-                'attributes' => [
-                    \yii\db\ActiveRecord::EVENT_BEFORE_INSERT => 'version'
-                ],
-                'value' => 0
-            ],
-            [
+            'softDeleteBehavior' => [
                 'class' => SoftDeleteBehavior::className(),
                 'softDeleteAttributeValues' => [
                     'is_deleted' => true
                 ]
             ]
         ];
+    }
+
+    public static function find()
+    {
+        return parent::find()->where(['is_deleted' => false]);
     }
 }

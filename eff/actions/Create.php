@@ -9,7 +9,7 @@ use yii\widgets\ActiveForm;
 class Create extends Action
 {
     // redirect url
-    public $redirect = ['update'];
+    public $redirect = ['view'];
 
     // view file
     public $view = 'create';
