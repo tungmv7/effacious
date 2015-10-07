@@ -10,21 +10,20 @@ use yii\grid\GridView;
 $this->title = Yii::t('post', 'Posts');
 $this->params['breadcrumbs'][] = $this->title;
 ?>
-<div class="post-index">
+<div class="post-index content">
 
-    <h1><?= Html::encode($this->title) ?></h1>
-    <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
-
-    <p>
-        <?= Html::a(Yii::t('post', 'Create Post'), ['create'], ['class' => 'btn btn-success']) ?>
-    </p>
+    <div class="page-header">
+        <h3>
+            <?= Html::encode($this->title) ?>
+            <?= Html::a(Yii::t('post', 'Add new post'), ['create'], ['class' => 'btn bg-warning text-muted btn-xs']) ?>
+        </h3>
+    </div>
+    <?php  //echo $this->render('_search', ['model' => $searchModel]); ?>
 
     <?= GridView::widget([
         'dataProvider' => $dataProvider,
-        'filterModel' => $searchModel,
         'columns' => [
             ['class' => 'yii\grid\SerialColumn'],
-            'id',
             'name',
             'status',
             'type',

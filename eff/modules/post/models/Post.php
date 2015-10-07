@@ -58,9 +58,9 @@ class Post extends \eff\components\ActiveRecord
 
         $this->status = self::STATUS_PUBLISHED;
         $this->published_at = time();
-        $this->creator = 'tung';
         $this->visibility = self::VISIBILITY_PUBLIC;
         $this->type = self::FORMAT_STANDARD;
+        $this->creator = 'tung';
     }
 
     /**
@@ -74,12 +74,16 @@ class Post extends \eff\components\ActiveRecord
                 TimestampBehavior::className(),
                 [
                     'class' => SluggableBehavior::className(),
-                    'attribute' => 'title'
+                    'attribute' => 'name',
+                    'immutable' => true
                 ]
             ]
         );
     }
 
+    /**
+     * Define post statuses
+     */
     const STATUS_PUBLISHED = 'published';
     const STATUS_PENDING = 'pending';
     const STATUS_DRAFT = 'draft';
@@ -93,6 +97,9 @@ class Post extends \eff\components\ActiveRecord
         ];
     }
 
+    /**
+     * Define saving options
+     */
     const SAVE_OPTION_PUBLISH_IMMEDIATELY = 'publish_immediately';
     const SAVE_OPTION_PUBLISH_SCHEDULED = 'publish_scheduled';
     const SAVE_OPTION_PENDING_REVIEW = 'pending_review';
@@ -106,6 +113,9 @@ class Post extends \eff\components\ActiveRecord
         ];
     }
 
+    /**
+     * Define visibility types
+     */
     const VISIBILITY_PUBLIC = 'public';
     const VISIBILITY_PRIVATE = 'private';
     public static function getVisibilityTypes()
@@ -116,6 +126,9 @@ class Post extends \eff\components\ActiveRecord
         ];
     }
 
+    /**
+     * Define formatting types
+     */
     const FORMAT_STANDARD = 'standard';
     const FORMAT_GALLERY = 'gallery';
     const FORMAT_LIVE = 'live';

@@ -117,7 +117,7 @@ body {
 .content .page-header h6,
 .content .page-header .h6 {margin: 0;}
 .content .page-header small .btn-xs {margin-bottom: 7px;}
-
+.content .page-header {border-bottom: 1px dashed #eee;}
 hr {margin-top: 15px; margin-bottom: 15px;}
 
 /*modal*/
@@ -134,6 +134,7 @@ hr {margin-top: 15px; margin-bottom: 15px;}
 
 /*form-control*/
 .form-control {border-radius: 0; height: 40px; transition: none; box-shadow: none; -webkit-transition: none; -webkit-box-shadow: none;}
+.form-control.input-sm {height: 30px;}
 
 /*radio list*/
 .radio-list label {display: block;}
@@ -146,8 +147,8 @@ hr {margin-top: 15px; margin-bottom: 15px;}
 .panel-post .panel-heading a span.glyphicon-menu-down {display: none; line-height: 18px;}
 .panel-post .panel-heading a.collapsed span.glyphicon-menu-up {display: none;}
 .panel-post .panel-heading a.collapsed span.glyphicon-menu-down {display: block;}
-.panel-post .panel-heading a.published-status span{vertical-align: middle; line-height: 32px;}
-.panel-post .panel-heading span.save-buttons a.btn-success, .panel-post .panel-heading span.save-buttons a.btn-warning {color: #fff}
+.panel-post .panel-heading a.publish-status span{vertical-align: middle; line-height: 40px;}
+.panel-post .panel-heading label.text-current-status {margin: 0; display: block;}
 .panel-post .collapse.in, .panel-post .collapsing {border-top: 1px solid #ddd;}
 
 /*font and text*/
@@ -159,8 +160,14 @@ hr {margin-top: 15px; margin-bottom: 15px;}
 .post-form {}
 .post-form .radio-save-status {margin-top: 0;}
 .post-form .panel .panel-heading a.header-text {text-transform: uppercase;}
-.post-form .slug {font-style: italic; color: #333;}
+/*.post-form .slug {color: #333;}*/
 .post-form .featured-image-select {text-align: center}
 .post-form .featured-image-select a {display: block; margin-bottom: 15px; }
 .post-form .featured-image-select a:hover, .featured-image-select a:active {text-decoration: none;}
 .post-form .featured-image-select a .glyphicon-picture { cursor: pointer; font-size: 46px; color: #ccc}
+.post-form .slug-buttons {margin-top: 10px;}
+.post-form .slug-buttons .slug-editable p.raw-slug {max-width: 40%; white-space: nowrap; text-overflow: ellipsis; overflow: hidden; display: inline-block; margin: 0; vertical-align: middle;}
+.post-form .slug-buttons .slug-editable p.raw-slug input{width: 100%;}
+.post-form .slug-buttons .slug-editable .btn {margin-left: 2px;}
+.post-form .schedule-date {width: 130px; display: inline-block;}
+.post-form .schedule-time {width: 100px; display: inline-block;}
