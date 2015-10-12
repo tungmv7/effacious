@@ -1,0 +1,11 @@
+{
+  "id": "file",
+  "name": "File Module",
+  "class": "eff\\modules\\file\\Module",
+  "isCore": false,
+  "description": "This generator helps you to generate the skeleton code needed by a Eff module.",
+  "keywords": [
+    "file"
+  ],
+  "version": "1.0.0"
+}

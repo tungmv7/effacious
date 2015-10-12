@@ -8,12 +8,8 @@
 
 namespace eff\components;
 
-
-use eff\actions\Create;
-use eff\actions\Delete;
-use eff\actions\Index;
-use eff\actions\Update;
-use eff\actions\View;
+use yii\filters\AccessControl;
+use yii\filters\VerbFilter;
 
 class Controller extends \yii\web\Controller
 {
@@ -25,6 +21,34 @@ class Controller extends \yii\web\Controller
         $this->view->params['menu'] = [
             ['label' => \Yii::t('admin', 'Manage Modules'), 'url' => ['/module']],
             ['label' => \Yii::t('admin', 'Manage Posts'), 'url' => ['/post']],
+            ['label' => \Yii::t('admin', 'Manage Files'), 'url' => ['/file']],
+        ];
+    }
+
+    public function behaviors()
+    {
+        return [
+            'access' => [
+                'class' => AccessControl::className(),
+                'rules' => [
+                    [
+                        'actions' => ['login', 'error'],
+                        'allow' => true,
+                        'roles' => ['?'],
+                    ],
+                    [
+                        'allow' => true,
+                        'roles' => ['@']
+                    ]
+                ],
+            ],
+            'verbs' => [
+                'class' => VerbFilter::className(),
+                'actions' => [
+                    'logout' => ['post'],
+                    'delete' => ['post']
+                ],
+            ],
         ];
     }
 
@@ -32,19 +56,19 @@ class Controller extends \yii\web\Controller
     {
         return [
             'index' => [
-                'class' => Index::className()
+                'class' => \eff\actions\Index::className()
             ],
             'view' => [
-                'class' => View::className()
+                'class' => \eff\actions\View::className()
             ],
             'create' => [
-                'class' => Create::className()
+                'class' => \eff\actions\Create::className()
             ],
             'update' => [
-                'class' => Update::className()
+                'class' => \eff\actions\Update::className()
             ],
             'delete' => [
-                'class' => Delete::className()
+                'class' => \eff\actions\Delete::className()
             ]
         ];
     }

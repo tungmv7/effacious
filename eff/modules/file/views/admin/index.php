@@ -1,20 +1,21 @@
 <?php
+
 use yii\helpers\Html;
 use eff\components\GridView;
 
 /* @var $this yii\web\View */
-/* @var $searchModel eff\modules\post\models\PostSearch */
+/* @var $searchModel eff\modules\file\models\FileSearch */
 /* @var $dataProvider yii\data\ActiveDataProvider */
 
-$this->title = Yii::t('post', 'Posts');
+$this->title = Yii::t('file', 'Files');
 $this->params['breadcrumbs'][] = $this->title;
 ?>
-<div class="post-index content">
+<div class="file-index content">
 
     <div class="page-header">
         <h3>
             <?= Html::encode($this->title) ?>
-            <?= Html::a(Yii::t('post', 'Add new post'), ['create'], ['class' => 'btn bg-warning text-muted btn-xs']) ?>
+            <?= Html::a(Yii::t('file', 'Add new file'), ['create'], ['class' => 'btn bg-warning text-muted btn-xs']) ?>
         </h3>
     </div>
     <?= $this->render('_search', ['model' => $searchModel]); ?>
@@ -23,10 +24,11 @@ $this->params['breadcrumbs'][] = $this->title;
         'columns' => [
             ['class' => 'yii\grid\CheckboxColumn'],
             'name',
-            'status',
-            'type',
-            'visibility',
+            'base_path',
+            'base_url:url',
+            'file_type',
             ['class' => 'yii\grid\ActionColumn'],
         ],
     ]); ?>
+
 </div>

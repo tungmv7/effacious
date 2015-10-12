@@ -12,4 +12,5 @@ namespace eff\components;
 class ActiveForm extends \yii\widgets\ActiveForm
 {
     public $enableClientValidation = false;
+    public $errorSummaryCssClass = 'error-summary alert alert-danger';
 }

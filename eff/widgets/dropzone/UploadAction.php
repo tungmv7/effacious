@@ -1,6 +1,6 @@
 <?php
 
-namespace devgroup\dropzone;
+namespace eff\widgets\dropzone;
 
 use Yii;
 use yii\base\Action;

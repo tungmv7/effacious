@@ -41,6 +41,7 @@ class Update extends Action
 
             // save and redirect if successful
             if ($model->save()) {
+                Yii::$app->session->setFlash('success', Yii::t('eff', 'Updated successfully.'));
                 return $this->controller->redirect(ArrayHelper::merge($this->redirect, $model->getPrimaryKey(true)));
             }
         }

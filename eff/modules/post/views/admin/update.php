@@ -10,7 +10,7 @@ $this->params['breadcrumbs'][] = ['label' => Yii::t('post', 'Posts'), 'url' => [
 $this->params['breadcrumbs'][] = ['label' => $model->name, 'url' => ['view', 'id' => $model->id]];
 $this->params['breadcrumbs'][] = Yii::t('post', 'Update');
 ?>
-<div class="post-index content">
+<div class="post-update content">
 
     <div class="page-header">
         <h3>

@@ -118,7 +118,14 @@ body {
 .content .page-header .h6 {margin: 0;}
 .content .page-header small .btn-xs {margin-bottom: 7px;}
 .content .page-header {border-bottom: 1px dashed #eee;}
-hr {margin-top: 15px; margin-bottom: 15px;}
+.content hr {margin-top: 15px; margin-bottom: 15px;}
+.content .alert {border: none; border-left-style: solid; border-left-width: 5px; border-radius: 0; padding: 10px 15px;}
+.content .alert button.close {line-height: 20px;}
+.content .table > thead > tr > th {border-bottom: 1px solid #ddd; background-color: #f5f5f5;}
+.content .table > caption + thead > tr:first-child > th, .table > colgroup + thead > tr:first-child > th, .table > thead:first-child > tr:first-child > th, .table > caption + thead > tr:first-child > td, .table > colgroup + thead > tr:first-child > td, .table > thead:first-child > tr:first-child > td
+{border-top: 1px solid #ddd;}
+.content .table > thead > tr > th:first-child {border-left: 1px solid #ddd;}
+.content .table > thead > tr > th:last-child {border-right: 1px solid #ddd;}
 
 /*modal*/
 .eff-modal {top: 20vh;}
@@ -171,3 +178,8 @@ hr {margin-top: 15px; margin-bottom: 15px;}
 .post-form .slug-buttons .slug-editable .btn {margin-left: 2px;}
 .post-form .schedule-date {width: 130px; display: inline-block;}
 .post-form .schedule-time {width: 100px; display: inline-block;}
+
+/* check box */
+.checkbox input[type=checkbox]:checked + label:after {font-family: 'Glyphicons Halflings'; content: "\e013";}
+.checkbox label:after {padding-left: 4px; padding-top: 2px; font-size: 9px;}
+.grid-view .checkbox {margin: 0;}

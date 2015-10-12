@@ -38,6 +38,7 @@ class Create extends Action
 
             // save and redirect if successful
             if ($model->save()) {
+                Yii::$app->session->setFlash('success', Yii::t('eff', 'Added successfully.'));
                 return $this->controller->redirect(ArrayHelper::merge($this->redirect, $model->getPrimaryKey(true)));
             }
         }

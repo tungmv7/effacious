@@ -10,8 +10,11 @@ use \eff\components\ActiveForm;
 <div class="post-form row">
 
     <?php $form = ActiveForm::begin(); ?>
+    <div class="col-md-12">
+        <?= \eff\widgets\Alert::widget() ?>
+        <?= $form->errorSummary($model); ?>
+    </div>
     <?php $isNewRecord = $model->getIsNewRecord(); ?>
-    <?= $form->errorSummary($model); ?>
     <div class="col-md-8">
 
         <div class="form-group">

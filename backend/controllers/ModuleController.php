@@ -2,29 +2,16 @@
 
 namespace backend\controllers;
 
+use eff\components\Controller;
 use Yii;
-use common\models\Module;
-use backend\components\Controller;
-use yii\helpers\Json;
-use yii\helpers\VarDumper;
-use yii\web\NotFoundHttpException;
-use yii\filters\VerbFilter;
-
 /**
  * ModuleController implements the CRUD actions for Module model.
  */
 class ModuleController extends Controller
 {
-    public function behaviors()
+    public function actions()
     {
-        return [
-            'verbs' => [
-                'class' => VerbFilter::className(),
-                'actions' => [
-                    'delete' => ['post'],
-                ],
-            ],
-        ];
+        return [];
     }
 
     /**
