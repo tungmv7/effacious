@@ -8,6 +8,42 @@ use \eff\components\ActiveForm;
 ?>
 
 <div class="post-form row">
+    <?php
+    // IMPORTANT: must place this code before form to execute pjax
+
+    echo eff\modules\file\widgets\FileModal::widget([
+        'id' => 'post-featured-image-modal',
+        'header' => Html::tag('h4', 'Featured Image', ['class' => 'modal-title']),
+        'footer' => Html::a('Close', '#', ['class' => 'btn', 'data-dismiss' => 'modal']) . "\n" . Html::a("Set featured image", 'javascript:;', ['class' => 'btn btn-primary btn-sm btn-set-featured-image']),
+        'embedParams' => ['selectMode' => 'single']
+    ]);
+    $js = "
+        $('.btn-set-featured-image').on('click', function(e) {
+            var url = $('.file-info').find('input.url').val();
+            var id = $('.file-info').find('span.file-id').html();
+            var img = '<img src='+url+' />';
+            var hiddenId = '#".Html::getInputId($model, 'featured_image')."';
+            $(hiddenId).val(id);
+            $('.featured-image-select').find('.default-image').hide();
+            $('.featured-image-select').find('.btn-choose-featured-image').attr('class', 'btn-choose-featured-image').html(img);
+            $('#post-featured-image-modal').modal('toggle');
+        })
+    ";
+    $this->registerJs($js);
+
+
+    echo eff\modules\file\widgets\FileModal::widget([
+        'id' => 'post-media-modal',
+        'header' => Html::tag('h4', 'Insert a media', ['class' => 'modal-title']),
+        'footer' => Html::a('Close', '#', ['class' => 'btn', 'data-dismiss' => 'modal']) . "\n" . Html::a("Insert to post", 'javascript:;', ['class' => 'btn btn-primary btn-sm btn-insert-to-post'])
+    ]);
+    $js = "
+        $('.btn-insert-to-post').on('click', function(e) {
+            $('.filpost-media-modal').modal('toggle');
+        })
+    ";
+    $this->registerJs($js);
+    ?>
 
     <?php $form = ActiveForm::begin(); ?>
     <div class="col-md-12">
@@ -24,31 +60,33 @@ use \eff\components\ActiveForm;
             <?php if($isNewRecord) echo Html::a(Html::tag('span', '', ['class' => 'glyphicon glyphicon-floppy-disk']) . ' ' .Yii::t('post', 'Save as Draft'), '', ['class' => 'btn pull-right btn-sm text-muted btn-save-draft']) ?>
         </div>
         <script>
-            $(function() {
-                $(".btn-save-draft").on('click', function(e) {
-                    var draftStatus = "<?= $model::STATUS_DRAFT ?>";
-                    var statusElement = "#<?= Html::getInputId($model, 'status') ?>";
-                    var formElement = "#<?= $form->getId() ?>";
+            <?php
+            $js = "
+                $('.btn-save-draft').on('click', function(e) {
+                        var draftStatus = '".$model::STATUS_DRAFT."';
+                    var statusElement = '#".Html::getInputId($model, 'status')."';
+                    var formElement = '#".$form->getId()."';
                     $(statusElement).val(draftStatus);
                     $(formElement).submit();
                     return false;
                 });
-
-                $(".btn-submit").on('click', function(e) {
-                    var formElement = "#<?= $form->getId() ?>";
+                $('.btn-submit').on('click', function(e) {
+                    var formElement = '#".$form->getId()."';
                     $(formElement).submit();
                 });
 
-                $(".btn-trash").on('click', function(e) {
-                    if (window.confirm("<?= Yii::t('post', 'Are you sure you want to do this ?') ?>") ) {
-                        var postId = getParameterByName("id");
-                        var deleteUrl = "<?= \yii\helpers\Url::toRoute(['delete']) ?>";
+                $('.btn-trash').on('click', function(e) {
+                    if (window.confirm('".Yii::t('post', 'Are you sure you want to do this ?')."') ) {
+                        var postId = getParameterByName('id');
+                        var deleteUrl = '".\yii\helpers\Url::toRoute(['delete'])."';
                         if (postId !== 'undefined') {
-                            $.post(deleteUrl + "?id=" + postId);
+                            $.post(deleteUrl + '?id=' + postId);
                         }
                     }
                 });
-            });
+            ";
+            $this->registerJs($js);
+            ?>
         </script>
 
         <?php
@@ -65,6 +103,13 @@ use \eff\components\ActiveForm;
         echo Html::endTag('div');
         echo $form->endField();
 
+        // media and other feature buttons
+        echo Html::beginTag('div', ['class' => 'form-group media-group-buttons']);
+        echo Html::a(Html::tag('span', '', ['class' => 'glyphicon glyphicon-plus']) . ' ' . Yii::t('post', 'Add media'), 'javascript:;', ['class' => 'btn btn-sm btn-default', 'data-toggle' => 'modal', 'data-target' => '#media-modal'])
+        . "\n" . Html::a(Html::tag('span', '', ['class' => 'glyphicon glyphicon-record']) . ' ' . Yii::t('post', 'Add poll'), 'javascript:;', ['class' => 'btn btn-sm btn-default', 'data-toggle' => 'modal', 'data-target' => '#media-modal'])
+        . "\n" . Html::a(Html::tag('span', '', ['class' => 'glyphicon glyphicon-tasks']) . ' ' . Yii::t('post', 'Add form'), 'javascript:;', ['class' => 'btn btn-sm btn-default', 'data-toggle' => 'modal', 'data-target' => '#media-modal']);
+
+        echo Html::endTag('div');
 
         // post body - content
         echo $form->beginField($model, 'body');
@@ -127,30 +172,31 @@ use \eff\components\ActiveForm;
                             ])?>
                         </div>
                     </div>
-                    <script type="text/javascript">
-                        $(function () {
-                            $(".radio-save-status").on('change', function (e) {
-                                var text = e.target.nextSibling.nodeValue.trim();
-                                var value = e.target.value;
-                                var pendingStatus = "<?= $model::STATUS_PENDING ?>";
-                                var publishedStatus = "<?= $model::STATUS_PUBLISHED ?>";
-                                var statusElement = "#<?= Html::getInputId($model, 'status') ?>";
-                                if (text != 'undefined' && value != 'undefined') {
-                                    $('.btn-submit').html(e.target.nextSibling.nodeValue.trim());
-                                    if (value == 'publish_immediately') {
-                                        $(statusElement).val(publishedStatus);
-                                        $('.btn-submit').removeClass('btn-info').removeClass('btn-warning').addClass('btn-success')
-                                    } else if (value == 'publish_scheduled') {
-                                        $(statusElement).val(publishedStatus);
-                                        $('.btn-submit').removeClass('btn-success').removeClass('btn-warning').addClass('btn-info')
-                                    } else if (value == 'pending_review') {
-                                        $(statusElement).val(pendingStatus);
-                                        $('.btn-submit').removeClass('btn-info').removeClass('btn-success').addClass('btn-warning')
-                                    }
+                    <?php
+                    $js = "
+                        $('.radio-save-status').on('change', function (e) {
+                            var text = e.target.nextSibling.nodeValue.trim();
+                            var value = e.target.value;
+                            var pendingStatus = '".$model::STATUS_PENDING."';
+                            var publishedStatus = '".$model::STATUS_PUBLISHED."';
+                            var statusElement = '#".Html::getInputId($model, 'status')."';
+                            if (text != 'undefined' && value != 'undefined') {
+                                $('.btn-submit').html(e.target.nextSibling.nodeValue.trim());
+                                if (value == 'publish_immediately') {
+                                    $(statusElement).val(publishedStatus);
+                                    $('.btn-submit').removeClass('btn-info').removeClass('btn-warning').addClass('btn-success')
+                                } else if (value == 'publish_scheduled') {
+                                    $(statusElement).val(publishedStatus);
+                                    $('.btn-submit').removeClass('btn-success').removeClass('btn-warning').addClass('btn-info')
+                                } else if (value == 'pending_review') {
+                                    $(statusElement).val(pendingStatus);
+                                    $('.btn-submit').removeClass('btn-info').removeClass('btn-success').addClass('btn-warning')
                                 }
-                            })
+                            }
                         })
-                    </script>
+                    ";
+                    $this->registerJs($js);
+                    ?>
                 </div>
             </div>
         </div>
@@ -165,9 +211,9 @@ use \eff\components\ActiveForm;
             <div id="post-featured-image" class="collapse in">
                 <div class="panel-body">
                     <div class="featured-image-select">
-                        <a><i class="glyphicon glyphicon-picture"></i></a>
-                        <button class="btn btn-primary btn-xs">Choose featured image</button>
-
+                        <a class="default-image"><i class="glyphicon glyphicon-picture"></i></a>
+                        <?= Html::activeHiddenInput($model, 'featured_image') ?>
+                        <?= Html::a(Yii::t('post', 'Choose featured image'), '#', ['class' => 'btn btn-primary btn-xs btn-choose-featured-image', 'data-toggle' => 'modal', 'data-target' => '.files-modal']) ?>
                     </div>
                 </div>
             </div>
@@ -266,7 +312,7 @@ use \eff\components\ActiveForm;
         </div>
 
     </div>
-
+</div>
     <?php ActiveForm::end(); ?>
 
-</div>
+

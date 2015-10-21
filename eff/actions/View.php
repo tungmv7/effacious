@@ -24,7 +24,7 @@ class View extends Action
 
         // render to view
         return $this->controller->render($this->view, [
-            'model' => $model
+            'model' => $model,
         ]);
 
     }

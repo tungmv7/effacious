@@ -11,15 +11,7 @@ $this->params['breadcrumbs'][] = ['label' => Yii::t('file', 'Files'), 'url' => [
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="file-create content">
-
-    <div class="page-header">
-        <h3>
-            <?= Html::encode($this->title) ?>
-        </h3>
-    </div>
-
     <?= $this->render('_form', [
         'model' => $model,
     ]) ?>
-
 </div>

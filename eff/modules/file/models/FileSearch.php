@@ -5,10 +5,9 @@ namespace eff\modules\file\models;
 use Yii;
 use yii\base\Model;
 use yii\data\ActiveDataProvider;
-use eff\modules\file\models\File;
 
 /**
- * FileSearch represents the model behind the search form about `eff\modules\file\models\File`.
+ * FileSearch represents the model behind the search form about `eff\modules\filename\models\File`.
  */
 class FileSearch extends File
 {
@@ -19,7 +18,7 @@ class FileSearch extends File
     {
         return [
             [['id', 'created_by', 'created_at', 'updated_by', 'updated_at', 'version', 'is_deleted'], 'integer'],
-            [['name', 'base_path', 'base_url', 'file_type', 'storage', 'thumbnail', 'title', 'description', 'meta_data', 'deleted_at'], 'safe'],
+            [['name', 'path', 'url', 'type', 'storage', 'thumbnail', 'filename', 'description', 'meta_data', 'deleted_at'], 'safe'],
         ];
     }
 
@@ -41,10 +40,11 @@ class FileSearch extends File
      */
     public function search($params)
     {
-        $query = File::find();
+        $query = File::find()->orderBy('created_at desc');
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
+            'pagination' => ['pageSize' => 100]
         ]);
 
         $this->load($params);
@@ -66,15 +66,17 @@ class FileSearch extends File
         ]);
 
         $query->andFilterWhere(['like', 'name', $this->name])
-            ->andFilterWhere(['like', 'base_path', $this->base_path])
-            ->andFilterWhere(['like', 'base_url', $this->base_url])
-            ->andFilterWhere(['like', 'file_type', $this->file_type])
+            ->andFilterWhere(['like', 'path', $this->path])
+            ->andFilterWhere(['like', 'url', $this->url])
+            ->andFilterWhere(['like', 'type', $this->type])
             ->andFilterWhere(['like', 'storage', $this->storage])
             ->andFilterWhere(['like', 'thumbnail', $this->thumbnail])
-            ->andFilterWhere(['like', 'title', $this->title])
+            ->andFilterWhere(['like', 'filename', $this->filename])
             ->andFilterWhere(['like', 'description', $this->description])
             ->andFilterWhere(['like', 'meta_data', $this->meta_data])
             ->andFilterWhere(['like', 'deleted_at', $this->deleted_at]);
+
+
 
         return $dataProvider;
     }

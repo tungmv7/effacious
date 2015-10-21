@@ -6,6 +6,7 @@ use Yii;
 use yii\base\Widget;
 use yii\helpers\ArrayHelper;
 use yii\helpers\Html;
+use yii\helpers\Inflector;
 use yii\helpers\Json;
 use yii\helpers\Url;
 use yii\web\View;
@@ -33,18 +34,19 @@ class DropZone extends Widget
 
         Html::addCssClass($this->htmlOptions, 'dropzone');
         Html::addCssClass($this->messageOptions, 'dz-message');
-        $this->dropzoneName = 'dropzone_' . $this->id;
+        $this->dropzoneName = 'dropzone_' . Inflector::slug($this->id, '_');
         if (empty($this->message)) {
-            $this->message = Html::tag('div', 'Drop files here', ['class' => 'drop-file']) .
+            $msg = Html::tag('div', 'Drop files here', ['class' => 'drop-file']) .
                 Html::tag('label', 'OR', ['class' => 'drop-or']) .
                 Html::tag('div', 'Choose files to upload', ['class' => 'btn btn-default btn-xs']);
+            $this->message = Html::tag('div', Html::tag('div', $msg, ['class' => 'centered']), ['class' => 'dz-inner-message']);
         }
     }
 
     private function registerAssets()
     {
         DropZoneAsset::register($this->getView());
-        $this->getView()->registerJs('Dropzone.autoDiscover = false;');
+        $this->getView()->registerJs('Dropzone.autoDiscover = false;', View::POS_END);
     }
 
     protected function addFiles($files = [])
@@ -117,7 +119,6 @@ class DropZone extends Widget
         $this->createDropzone();
 
         foreach ($this->eventHandlers as $event => $handler) {
-            $handler = new \yii\web\JsExpression($handler);
             $this->getView()->registerJs(
                 $this->dropzoneName . ".on('{$event}', {$handler})"
             );

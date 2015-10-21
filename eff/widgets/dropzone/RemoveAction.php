@@ -7,7 +7,7 @@ use yii\base\Action;
 
 class RemoveAction extends Action
 {
-    public $uploadDir = '@webroot/upload';
+    public $uploadDir = '@files';
 
     public function run($fileName)
     {

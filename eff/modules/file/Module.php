@@ -6,6 +6,10 @@ class Module extends \common\components\Module
 {
     public $controllerNamespace = 'eff\modules\file\controllers';
 
+    public $basePath = '@files';
+
+    public $baseUrl = '@files';
+
     public function init()
     {
         parent::init();

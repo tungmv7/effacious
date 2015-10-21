@@ -12,10 +12,10 @@ class DropZoneAsset extends AssetBundle
         'custom.css'
     ];
     public $depends = [
-        'yii\web\JqueryAsset',
+//        'yii\web\JqueryAsset',
 //        'yii\jui\JuiAsset',
     ];
     public $js = [
-        'dropzone.min.js',
+        'dropzone.js',
     ];
 }

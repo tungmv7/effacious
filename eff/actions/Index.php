@@ -23,7 +23,6 @@ class Index extends Action
         $searchModel = new $modelSearchClass();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 
-        // render to view
         return $this->controller->render('index', [
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,

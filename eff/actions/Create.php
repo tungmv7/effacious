@@ -47,7 +47,6 @@ class Create extends Action
         return $this->controller->render($this->view, [
             'model' => $model,
         ]);
-
     }
 
 }

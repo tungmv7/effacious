@@ -89,8 +89,8 @@ NavBar::end();
             </div>
         </div>
     </div>
-    <script type="text/javascript">
-        $(function() {
+    <?php
+        $modalJs = "
             $('.eff-modal').on('shown.bs.modal', function (event) {
                 var trigger = $(event.relatedTarget);
                 var modal = trigger.data('target'), reload = trigger.data('reload');
@@ -101,21 +101,32 @@ NavBar::end();
                     $.pjax.reload({container: reload, async: false});
                 }
             });
+
             $('.eff-modal').on('show.bs.modal', function (event) {
                 var trigger = $(event.relatedTarget);
                 var url = trigger.data('url'), params = trigger.data('params');
                 if (url !== 'undefined' && params !== 'undefined') {
                     $.ajax({
                         url: url,
-                        type: "POST",
+                        type: 'POST',
                         data: params,
                         error: function(err) {},
                         success: function(data) {}
                     });
                 }
             });
-        });
-    </script>
+        ";
+        $this->registerJs($modalJs);
+
+        $js = "
+            function reload(id) {
+                $('.modal').modal('hide');
+                $.pjax.reload({container: '#' + id});
+            }
+        ";
+        $this->registerJs($js, \yii\web\View::POS_END);
+
+    ?>
 
 
 </div>

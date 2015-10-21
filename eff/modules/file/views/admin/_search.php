@@ -26,9 +26,13 @@ use yii\widgets\ActiveForm;
                         </button>
                     </span>
                 </div>
+            </div>
+            <div class="form-group">
                 <button class="btn btn-default btn-sm">
                     <i class="glyphicon glyphicon-filter"></i> Filter
                 </button>
+            </div>
+            <div class="form-group">
                 <button class="btn btn-default btn-sm">
                     <i class="glyphicon glyphicon-cog"></i> Settings
                 </button>

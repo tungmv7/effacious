@@ -17,6 +17,15 @@ class Controller extends \yii\web\Controller
     public function __construct($id, $module, $config = [])
     {
         parent::__construct($id, $module, $config);
+    }
+
+    public function init()
+    {
+        $layout = \Yii::$app->request->get('layout');
+        if (!empty($layout)) {
+            $this->layout = '/'. $layout; // default layout on app layout dir
+            $this->view->params['layout'] = $layout;
+        }
 
         $this->view->params['menu'] = [
             ['label' => \Yii::t('admin', 'Manage Modules'), 'url' => ['/module']],

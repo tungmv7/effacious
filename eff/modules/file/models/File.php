@@ -3,18 +3,22 @@
 namespace eff\modules\file\models;
 
 use Yii;
+use yii\behaviors\BlameableBehavior;
+use yii\behaviors\TimestampBehavior;
+use yii\helpers\ArrayHelper;
 
 /**
- * This is the model class for table "{{%file}}".
+ * This is the model class for table "file".
  *
  * @property integer $id
  * @property string $name
- * @property string $base_path
- * @property string $base_url
- * @property string $file_type
+ * @property string $filename
+ * @property string $path
+ * @property string $url
+ * @property string $type
+ * @property string $extension
  * @property string $storage
  * @property string $thumbnail
- * @property string $title
  * @property string $description
  * @property string $meta_data
  * @property integer $created_by
@@ -27,12 +31,33 @@ use Yii;
  */
 class File extends \eff\components\ActiveRecord
 {
+
+    public function loadDefaultValues()
+    {
+        parent::loadDefaultValues();
+
+        $this->storage = 'default';
+    }
+
+    public function optimisticLock()
+    {
+        return 'version';
+    }
+
+    public function behaviors()
+    {
+        return ArrayHelper::merge(parent::behaviors(), [
+            BlameableBehavior::className(),
+            TimestampBehavior::className()
+        ]);
+    }
+
     /**
      * @inheritdoc
      */
     public static function tableName()
     {
-        return '{{%file}}';
+        return 'file';
     }
 
     /**
@@ -41,10 +66,10 @@ class File extends \eff\components\ActiveRecord
     public function rules()
     {
         return [
-            [['name', 'base_path', 'base_url', 'file_type', 'storage', 'title'], 'required'],
+            [['name', 'filename', 'path', 'url', 'type', 'extension', 'storage'], 'required'],
             [['meta_data'], 'string'],
             [['created_by', 'created_at', 'updated_by', 'updated_at', 'version', 'is_deleted'], 'integer'],
-            [['name', 'base_path', 'base_url', 'file_type', 'storage', 'thumbnail', 'title', 'description', 'deleted_at'], 'string', 'max' => 255]
+            [['name', 'filename', 'path', 'url', 'type', 'extension', 'storage', 'thumbnail', 'description', 'deleted_at'], 'string', 'max' => 255]
         ];
     }
 
@@ -56,12 +81,13 @@ class File extends \eff\components\ActiveRecord
         return [
             'id' => Yii::t('post', 'ID'),
             'name' => Yii::t('post', 'Name'),
-            'base_path' => Yii::t('post', 'Base Path'),
-            'base_url' => Yii::t('post', 'Base Url'),
-            'file_type' => Yii::t('post', 'File Type'),
+            'filename' => Yii::t('post', 'Filename'),
+            'path' => Yii::t('post', 'Path'),
+            'url' => Yii::t('post', 'Url'),
+            'type' => Yii::t('post', 'Type'),
+            'extension' => Yii::t('post', 'Extension'),
             'storage' => Yii::t('post', 'Storage'),
             'thumbnail' => Yii::t('post', 'Thumbnail'),
-            'title' => Yii::t('post', 'Title'),
             'description' => Yii::t('post', 'Description'),
             'meta_data' => Yii::t('post', 'Meta Data'),
             'created_by' => Yii::t('post', 'Created By'),

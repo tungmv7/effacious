@@ -9,6 +9,8 @@
 namespace eff\actions;
 
 
+use yii\helpers\Json;
+
 class Delete extends Action
 {
     public $deleteType = 'softDelete';
@@ -29,7 +31,11 @@ class Delete extends Action
         $modelClass::findOne($id)->$deleteFunction();
 
         // render to view
-        return $this->controller->redirect($this->redirect);
+        if (\Yii::$app->request->isAjax) {
+            echo Json::encode('success', 200);
+        } else {
+            return $this->controller->redirect($this->redirect);
+        }
 
     }
 
