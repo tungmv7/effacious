@@ -9,8 +9,8 @@ use \eff\components\ActiveForm;
 
 <div class="post-form row">
     <?php
-    // IMPORTANT: must place this code before form to execute pjax
 
+    // IMPORTANT: must place this code before form to execute pjax
     echo eff\modules\file\widgets\FileModal::widget([
         'id' => 'post-featured-image-modal',
         'header' => Html::tag('h4', 'Featured Image', ['class' => 'modal-title']),
@@ -19,30 +19,30 @@ use \eff\components\ActiveForm;
     ]);
     $js = "
         $('.btn-set-featured-image').on('click', function(e) {
-            var url = $('.file-info').find('input.url').val();
-            var id = $('.file-info').find('span.file-id').html();
-            var img = '<img src='+url+' />';
-            var hiddenId = '#".Html::getInputId($model, 'featured_image')."';
-            $(hiddenId).val(id);
-            $('.featured-image-select').find('.default-image').hide();
-            $('.featured-image-select').find('.btn-choose-featured-image').attr('class', 'btn-choose-featured-image').html(img);
-            $('#post-featured-image-modal').modal('toggle');
+            if (Array.isArray(embedModalConfiguration.selectedItems) && embedModalConfiguration.selectedItems.length > 0) {
+                var item = embedModalConfiguration.selectedItems[0];
+                var img = '<img src='+embedModalConfiguration.staticDomain+item.url+' />';
+                $('#".Html::getInputId($model, 'featured_image')."').val(item.id);
+                $('.featured-image-select').find('.default-image').hide();
+                $('.featured-image-select').find('.btn-choose-featured-image').attr('class', 'btn-choose-featured-image').html(img);
+                $('#post-featured-image-modal').modal('toggle');
+            }
         })
     ";
-    $this->registerJs($js);
+    $this->registerJs($js, \yii\web\View::POS_END);
 
 
-    echo eff\modules\file\widgets\FileModal::widget([
-        'id' => 'post-media-modal',
-        'header' => Html::tag('h4', 'Insert a media', ['class' => 'modal-title']),
-        'footer' => Html::a('Close', '#', ['class' => 'btn', 'data-dismiss' => 'modal']) . "\n" . Html::a("Insert to post", 'javascript:;', ['class' => 'btn btn-primary btn-sm btn-insert-to-post'])
-    ]);
-    $js = "
-        $('.btn-insert-to-post').on('click', function(e) {
-            $('.filpost-media-modal').modal('toggle');
-        })
-    ";
-    $this->registerJs($js);
+//    echo eff\modules\file\widgets\FileModal::widget([
+//        'id' => 'post-media-modal',
+//        'header' => Html::tag('h4', 'Insert a media', ['class' => 'modal-title']),
+//        'footer' => Html::a('Close', '#', ['class' => 'btn', 'data-dismiss' => 'modal']) . "\n" . Html::a("Insert to post", 'javascript:;', ['class' => 'btn btn-primary btn-sm btn-insert-to-post'])
+//    ]);
+//    $js = "
+//        $('.btn-insert-to-post').on('click', function(e) {
+//            $('.filpost-media-modal').modal('toggle');
+//        })
+//    ";
+//    $this->registerJs($js);
     ?>
 
     <?php $form = ActiveForm::begin(); ?>
@@ -103,14 +103,6 @@ use \eff\components\ActiveForm;
         echo Html::endTag('div');
         echo $form->endField();
 
-        // media and other feature buttons
-        echo Html::beginTag('div', ['class' => 'form-group media-group-buttons']);
-        echo Html::a(Html::tag('span', '', ['class' => 'glyphicon glyphicon-plus']) . ' ' . Yii::t('post', 'Add media'), 'javascript:;', ['class' => 'btn btn-sm btn-default', 'data-toggle' => 'modal', 'data-target' => '#media-modal'])
-        . "\n" . Html::a(Html::tag('span', '', ['class' => 'glyphicon glyphicon-record']) . ' ' . Yii::t('post', 'Add poll'), 'javascript:;', ['class' => 'btn btn-sm btn-default', 'data-toggle' => 'modal', 'data-target' => '#media-modal'])
-        . "\n" . Html::a(Html::tag('span', '', ['class' => 'glyphicon glyphicon-tasks']) . ' ' . Yii::t('post', 'Add form'), 'javascript:;', ['class' => 'btn btn-sm btn-default', 'data-toggle' => 'modal', 'data-target' => '#media-modal']);
-
-        echo Html::endTag('div');
-
         // post body - content
         echo $form->beginField($model, 'body');
         echo \eff\widgets\redactor\Redactor::widget([
@@ -120,6 +112,7 @@ use \eff\components\ActiveForm;
                 'minHeight' => '400px',
                 'maxHeight' => '600px',
                 'placeholder' => Yii::t('post', 'Enter your awesome content ...'),
+                'plugins' => ['video', 'media']
             ]
         ]);
         echo Html::error($model, 'body', ['class' => 'help-block']);

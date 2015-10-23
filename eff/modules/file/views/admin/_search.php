@@ -13,15 +13,16 @@ use yii\widgets\ActiveForm;
     <?php $form = ActiveForm::begin([
         'action' => ['index'],
         'method' => 'get',
+        'options' => [
+            'class' => 'form-inline'
+        ]
     ]); ?>
 
-    <div style="margin: 0 0 15px 0;">
-        <div class="form-inline pull-right">
             <div class="form-group">
                 <div class="input-group input-group-sm">
                     <input type="text" class="form-control" placeholder="Keywords ...">
                     <span class="input-group-btn">
-                        <button class="btn btn-default" type="button">
+                        <button class="btn btn-default" type="submit">
                             <i class="glyphicon glyphicon-search"></i> Search
                         </button>
                     </span>
@@ -52,9 +53,6 @@ use yii\widgets\ActiveForm;
                     </ul>
                 </div>
             </div>
-        </div>
-        <div class="clearfix"></div>
-    </div>
 
     <?php ActiveForm::end(); ?>
 

@@ -2,3 +2,6 @@
 .redactor-toolbar li a {padding: 12px 10px;}
 .redactor-toolbar li:first-child a {margin-left: 4px;}
 .redactor-editor {border: 1px solid #ccc; border-top: 0;}
+.re-media:before {
+    content: "\e61f";
+}

@@ -1,7 +1,7 @@
 /**
  * Convert a string to a Slug String
  **/
-String.prototype.toSlug = function(ucfirst, fromSlug) {
+String.prototype.toSlug = function(ucfirst, fromSlug, whileTyping) {
     var str = this;
     str = str.toUpperCase();
     str = str.toLowerCase();
@@ -30,12 +30,15 @@ String.prototype.toSlug = function(ucfirst, fromSlug) {
     str = str.replace(/[\'\:\/\[\]-]+/g, ' ');
     str = str.replace(/[ ]/g, '-');
 
-    if (str.charAt(str.length - 1) == '-') {
-        str = str.substring(0, str.length - 1);
-    }
+    if (whileTyping !== true) {
 
-    if (str.charAt(0) == '-') {
-        str = str.substring(1, str.length);
+        if (str.charAt(str.length - 1) == '-') {
+            str = str.substring(0, str.length - 1);
+        }
+
+        if (str.charAt(0) == '-') {
+            str = str.substring(1, str.length);
+        }
     }
 
     if (ucfirst == true) {
@@ -57,6 +60,19 @@ function getParameterByName(name) {
         results = regex.exec(location.search);
     return results === null ? "undefined" : decodeURIComponent(results[1].replace(/\+/g, " "));
 }
+
+/**
+ * Replace all string
+ *
+ * @param find
+ * @param replace
+ * @returns {string}
+ */
+String.prototype.replaceAll = function (find, replace) {
+    var str = this;
+    var regex = new RegExp(find.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&'), 'g');
+    return str.replace(regex, replace);
+};
 
 
 

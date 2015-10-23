@@ -18,10 +18,18 @@ $this->params['breadcrumbs'][] = $this->title;
             <?= Html::encode($this->title) ?>
             <?= Html::a(Yii::t('file', 'Add new file'), '#', ['class' => 'btn bg-warning text-muted btn-xs',
                 'data-toggle' => 'modal',
-                'data-target' => '.files-modal'
+                'data-target' => '#file_index_modal'
             ]) ?>
         </h3>
     </div>
+
+    <?php
+    echo FileModal::widget([
+        'id' => 'file_index_modal',
+        'header' => Html::tag('h4', 'Insert new file', ['class' => 'modal-title']),
+        'embedParams' => ['withLibrary' => false]
+    ]);
+    ?>
 
     <?= $this->render('_search', ['model' => $searchModel]); ?>
     <?php \yii\widgets\Pjax::begin(); ?>
@@ -39,21 +47,3 @@ $this->params['breadcrumbs'][] = $this->title;
     ]) ?>
     <?php \yii\widgets\Pjax::end(); ?>
 </div>
-<?php
-    $js = "
-        $('.file-wrapper .file-details').on('click', function(e) {
-            $(this).toggleClass('active');
-        });
-    ";
-    // $this->registerJs($js);
-?>
-<style>
-</style>
-<?php
-FileModal::begin([
-    'header' => Html::tag('h4', 'Insert new file', ['class' => 'modal-title']),
-    'footer' => Html::a("Insert into post", '#', ['class' => 'btn btn-primary'])
-]);
-echo $this->render("embed", ['dataProvider' => $dataProvider]);
-FileModal::end();
-?>

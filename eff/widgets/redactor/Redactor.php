@@ -17,8 +17,10 @@ class Redactor extends InputWidget
      */
     public function init()
     {
+        parent::init();
         $this->defaultOptions();
         $this->registerAssetBundle();
+        $this->registerPlugins();
         $this->registerScript();
     }
     /**
@@ -30,6 +32,23 @@ class Redactor extends InputWidget
             echo Html::activeTextarea($this->model, $this->attribute, $this->options);
         } else {
             echo Html::textarea($this->name, $this->value, $this->options);
+        }
+    }
+
+    protected function registerPlugins()
+    {
+        if (isset($this->clientOptions['plugins']) && count($this->clientOptions['plugins'])) {
+            foreach ($this->clientOptions['plugins'] as $plugin) {
+                $sourcePath = $this->getSourcePath();
+                $js = 'plugins/' . $plugin . '/' . $plugin . '.js';
+                if (file_exists($sourcePath . DIRECTORY_SEPARATOR . $js)) {
+                    $this->assetBundle->js[] = $js;
+                }
+                $css = 'plugins/' . $plugin . '/' . $plugin . '.css';
+                if (file_exists($sourcePath . DIRECTORY_SEPARATOR . $css)) {
+                    $this->assetBundle->css[] = $css;
+                }
+            }
         }
     }
 
@@ -65,4 +84,21 @@ class Redactor extends InputWidget
         $this->_assetBundle = RedactorAsset::register($this->getView());
     }
 
+    /**
+     * @return AssetBundle
+     */
+    public function getAssetBundle()
+    {
+        if (!($this->_assetBundle instanceof AssetBundle)) {
+            $this->registerAssetBundle();
+        }
+        return $this->_assetBundle;
+    }
+    /**
+     * @return bool|string The path of assetBundle
+     */
+    public function getSourcePath()
+    {
+        return Yii::getAlias($this->getAssetBundle()->sourcePath);
+    }
 }

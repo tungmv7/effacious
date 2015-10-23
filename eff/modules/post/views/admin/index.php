@@ -17,6 +17,7 @@ $this->params['breadcrumbs'][] = $this->title;
             <?= Html::a(Yii::t('post', 'Add new post'), ['create'], ['class' => 'btn bg-warning text-muted btn-xs']) ?>
         </h3>
     </div>
+    <?php \yii\widgets\Pjax::begin(); ?>
     <?= $this->render('_search', ['model' => $searchModel]); ?>
     <?= GridView::widget([
         'dataProvider' => $dataProvider,
@@ -29,4 +30,5 @@ $this->params['breadcrumbs'][] = $this->title;
             ['class' => 'yii\grid\ActionColumn'],
         ],
     ]); ?>
+    <?php \yii\widgets\Pjax::end(); ?>
 </div>

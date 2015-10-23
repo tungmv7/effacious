@@ -19,12 +19,25 @@ class FileModal extends \yii\bootstrap\Modal
     public $options = ['class' => 'files-modal'];
 
     public $embedView = "@eff/modules/file/views/admin/embed";
-    public $embedParams = ['selectMode' => 'multiple'];
+    public $embedParams = [];
 
     public function init()
     {
         if (!isset($this->options['id'])) {
             $this->options['id'] = $this->getId();
+        }
+        if (!isset($this->embedParams['selectMode'])) {
+            $this->embedParams['selectMode'] = 'multiple';
+        }
+        if (!isset($this->embedParams['withLibrary'])) {
+            $this->embedParams['withLibrary'] = true;
+        }
+        if (!isset($this->embedParams['withFromLink'])) {
+            $this->embedParams['withFromLink'] = true;
+        }
+        if (!isset($this->embedParams['dataProvider']) && $this->embedParams['withLibrary']) {
+            $searchModelClass = new \eff\modules\file\models\FileSearch();
+            $this->embedParams['dataProvider'] = $searchModelClass->search(Yii::$app->request->queryParams);
         }
         $this->options['data-unique-id'] = Inflector::slug($this->id, '');
         $this->initOptions();
@@ -39,11 +52,6 @@ class FileModal extends \yii\bootstrap\Modal
 
     public function run()
     {
-
-        if (!isset($this->embedParams['dataProvider'])) {
-            $searchModelClass = new \eff\modules\file\models\FileSearch();
-            $this->embedParams['dataProvider'] = $searchModelClass->search(Yii::$app->request->queryParams);
-        }
         $this->embedParams['modal'] = $this->id;
         echo "\n" . $this->render($this->embedView, $this->embedParams);
         echo "\n" . $this->renderBodyEnd();

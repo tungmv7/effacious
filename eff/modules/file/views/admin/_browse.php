@@ -1,4 +1,6 @@
 <?php \yii\widgets\Pjax::begin(['id' => $reloadGrid]); ?>
+<div class="file-wrapper">
+<?= $this->render("_search")?>
 <?= \eff\components\ListView::widget([
     'dataProvider' => $dataProvider,
     'itemView' => '_item',
@@ -8,11 +10,11 @@
     ],
     'options' => [
         'tag' => 'ul',
-        'class' => 'file-wrapper'
+        'class' => 'file-wrapper-thumbs'
     ]
 ]) ?>
+</div>
 <?= $this->render("_sidebar") ?>
-
 <?php
     $jsBindOnPjax = "
         $('#' + embedModalConfiguration.modal + ' li.file-details').on('click', function(e) {
@@ -107,7 +109,7 @@
             idsContainer.val(ids.join(','));
         });
     ";
-    $this->registerJs($jsBindOnPjax);
+    $this->registerJs($jsBindOnPjax, \yii\web\View::POS_END);
 ?>
 <?php \yii\widgets\Pjax::end(); ?>
 <?php
