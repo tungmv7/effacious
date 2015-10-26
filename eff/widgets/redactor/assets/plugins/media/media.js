@@ -15,7 +15,7 @@ if (!RedactorPlugins) var RedactorPlugins = {};
             },
             showAlert: function(buttonName)
             {
-                $("#post-featured-image-modal").modal("toggle");
+                $("#post-media-modal").modal("toggle");
             }
         };
     };

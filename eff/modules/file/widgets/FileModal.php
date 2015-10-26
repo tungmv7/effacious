@@ -5,6 +5,7 @@ namespace eff\modules\file\widgets;
 use Yii;
 use yii\helpers\Html;
 use yii\helpers\Inflector;
+use yii\helpers\StringHelper;
 
 /**
  * Created by PhpStorm.
@@ -26,8 +27,8 @@ class FileModal extends \yii\bootstrap\Modal
         if (!isset($this->options['id'])) {
             $this->options['id'] = $this->getId();
         }
-        if (!isset($this->embedParams['selectMode'])) {
-            $this->embedParams['selectMode'] = 'multiple';
+        if (!isset($this->embedParams['isMultiple'])) {
+            $this->embedParams['isMultiple'] = true;
         }
         if (!isset($this->embedParams['withLibrary'])) {
             $this->embedParams['withLibrary'] = true;
@@ -35,11 +36,22 @@ class FileModal extends \yii\bootstrap\Modal
         if (!isset($this->embedParams['withFromLink'])) {
             $this->embedParams['withFromLink'] = true;
         }
+        if (!isset($this->embedParams['allowedTypes'])) {
+            $this->embedParams['acceptedFiles'] = ['image/*', 'video/*', 'audio/*', '.doc', '.xls', '.pdf'];
+        }
         if (!isset($this->embedParams['dataProvider']) && $this->embedParams['withLibrary']) {
             $searchModelClass = new \eff\modules\file\models\FileSearch();
-            $this->embedParams['dataProvider'] = $searchModelClass->search(Yii::$app->request->queryParams);
+
+            $params = Yii::$app->request->queryParams;
+            $params["File['type']"] = 'image/';
+
+            $this->embedParams['dataProvider'] = $searchModelClass->search($params);
+        }
+        if (!isset($this->embedParams['objectHandlerFunctions'])) {
+            $this->embedParams['objectHandlerFunctions'] = uniqid("fileHandler");
         }
         $this->options['data-unique-id'] = Inflector::slug($this->id, '');
+        $this->options['data-handler'] = $this->embedParams['objectHandlerFunctions'];
         $this->initOptions();
         echo $this->renderToggleButton() . "\n";
         echo Html::beginTag('div', $this->options) . "\n";

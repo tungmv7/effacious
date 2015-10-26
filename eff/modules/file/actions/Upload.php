@@ -7,6 +7,7 @@ use eff\modules\file\models\File;
 use Yii;
 use yii\base\Action;
 use yii\base\InvalidValueException;
+use yii\helpers\ArrayHelper;
 use yii\helpers\Inflector;
 use yii\helpers\Json;
 use yii\web\HttpException;
@@ -41,22 +42,31 @@ class Upload extends Action
                 $fileBaseName = $fileBaseName . '-' . uniqid();
             }
 
+            if (strpos($file->type, 'image') === 0) {
+                $bucket = Yii::$app->fileStorage->getBucket('imageFiles');
+
+                // get file meta data
+                $metadata = exif_read_data($file->tempName);
+
+            } elseif (strpos($file->type, 'video') === 0) {
+                $bucket = Yii::$app->fileStorage->getBucket('videoFiles');
+            } elseif (strpos($file->type, 'audio') === 0) {
+                $bucket = Yii::$app->fileStorage->getBucket('audioFiles');
+            } elseif (strpos($file->type, 'text') === 0) {
+                $bucket = Yii::$app->fileStorage->getBucket('textFiles');
+            } elseif (strpos($file->type, 'application') === 0) {
+                $bucket = Yii::$app->fileStorage->getBucket('applicationFiles');
+            } else {
+                $tempBucket->deleteFile($fileBaseName . '.' . $file->extension);
+                throw new InvalidValueException("This file type '".$file->type."' is not supported.");
+            }
+
             // save to temp folder
             if ($tempBucket->moveFileIn($file->tempName, $fileBaseName . '.' . $file->extension)) {
 
-                if (strpos($file->type, 'image') === 0) {
-                    $bucket = Yii::$app->fileStorage->getBucket('imageFiles');
-                } elseif (strpos($file->type, 'video') === 0) {
-                    $bucket = Yii::$app->fileStorage->getBucket('videoFiles');
-                } elseif (strpos($file->type, 'audio') === 0) {
-                    $bucket = Yii::$app->fileStorage->getBucket('audioFiles');
-                } elseif (strpos($file->type, 'text') === 0) {
-                    $bucket = Yii::$app->fileStorage->getBucket('textFiles');
-                } elseif (strpos($file->type, 'application') === 0) {
-                    $bucket = Yii::$app->fileStorage->getBucket('applicationFiles');
-                } else {
-                    $tempBucket->deleteFile($fileBaseName . '.' . $file->extension);
-                    throw new InvalidValueException("This file type '".$file->type."' is not supported.");
+                // auto assign file size if file is not image
+                if (empty($metadata)) {
+                    $metadata['FileSize'] = $file->size;
                 }
 
                 // move to storage
@@ -67,7 +77,8 @@ class Upload extends Action
                             'name' => $fileBaseName . '.' . $file->extension,
                             'baseName' => $fileBaseName,
                             'type' => $file->type,
-                            'extension' => $file->extension
+                            'extension' => $file->extension,
+                            'metadata' => serialize($metadata)
                         ],
                         'path' => $bucket->getBaseSubPath() . DIRECTORY_SEPARATOR . $bucket->getFileNameWithSubDir($fileBaseName . '.' . $file->extension),
                         'url' => $bucket->getFileUrl($fileBaseName . '.' . $file->extension),
@@ -85,6 +96,7 @@ class Upload extends Action
                     $fileDb->name = $this->afterUploadData['file']['baseName'];
                     $fileDb->type = $this->afterUploadData['file']['type'];
                     $fileDb->extension = $this->afterUploadData['file']['extension'];
+                    $fileDb->meta_data = $this->afterUploadData['file']['metadata'];
                     if (isset($this->afterUploadData['storage'])) {
                         $fileDb->storage = $this->afterUploadData['storage'];
                     }

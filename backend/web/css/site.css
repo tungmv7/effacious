@@ -238,9 +238,29 @@ ul.nav-goog-tabs {border-bottom: 1px solid #e1e1e1;}
 .file-info {display: none;}
 .file-info hr {margin: 0;}
 .file-info .file-basic-info {padding: 15px;}
-.file-info .file-public-info {padding: 15px;}
+.file-info .file-public-info {padding: 0 15px;}
 .file-info .file-settings-info {padding: 5px 15px;}
+
 .file-info .file-basic-info .media .media-heading {margin-bottom: 15px;}
+.file-info .file-basic-info .media .media-heading .btn-edit {margin: 0 5px;}
 .file-info .file-basic-info .media .media-body p {font-size: 12px;}
 .file-info .file-basic-info .media .media-left a img.media-object {width: 120px; background: #ddd;}
-.file-info .file-public-info .form .form-group .control-label {font-size: 12px}
+.file-info .file-basic-info .media .object-media.file-extension {position: relative; width: 85px; padding-right: 10px; font-size: 1.2em; text-align: center; border: 1px solid #ddd; background: #fff; height: 85px;}
+.file-info .file-basic-info .media .object-media.file-extension > div {position: absolute; top: 0; bottom: 0; left: 0; right: 0; transform: translate(50%, 50%);}
+.file-info .file-basic-info .media .object-media.file-extension > div > div {transform: translate(-50%, -50%);}
+.file-info .file-basic-info .media .object-media.file-extension > div > div > span.glyphicon {font-size: 1.5em; display: block;}
+
+.file-info .file-public-info .form-horizontal .form-group .control-label,
+.file-info .file-settings-info .form-horizontal .form-group .control-label{font-size: 11px; padding-right: 0; padding-left: 2px; text-align: right; color: #777;}
+
+/*editor temp
+.ephox-polish-editor-container, .ephox-polish-source-container {border-color: #ccc !important;}
+.ephox-polish-editor-container .ephox-chameleon-toolbar-group {border-color: #ccc !important;}
+.ephox-polish-editor-container .ephox-chameleon-toolbar:first-child {box-shadow: none !important; border-bottom: 1px solid #ccc;}
+.ephox-polish-editor-container .ephox-chameleon-toolstrip,
+.ephox-polish-editor-container .ephox-chameleon-toolbar-group:last-child,
+.ephox-polish-editor-container .ephox-chameleon-toolbar.ephox-chameleon-toolbar-more{background: #f5f5f5 !important;}
+.ephox-polish-editor-container .ephox-chameleon-toolstrip .ephox-pastry-button {color: #333 !important;}
+.ephox-polish-editor-container:not(.ephox-polish-mobile-layout) .ephox-chameleon-toolstrip .ephox-pastry-button:active, .ephox-polish-editor-container:not(.ephox-polish-mobile-layout) .ephox-chameleon-toolstrip .ephox-pastry-statebutton-selected .ephox-pastry-button {box-shadow: none !important;}
+.ephox-polish-editor-container:not(.ephox-polish-mobile-layout) .ephox-chameleon-toolstrip .ephox-pastry-button:not(.ephox-pastry-button-disabled):hover, .ephox-polish-editor-container:not(.ephox-polish-mobile-layout) .ephox-chameleon-toolstrip .ephox-pastry-button:not(.ephox-pastry-button-disabled):active, .ephox-polish-editor-container .ephox-chameleon-toolstrip .ephox-pastry-statebutton-selected .ephox-pastry-button:not(.ephox-pastry-button-disabled), .ephox-polish-editor-container .ephox-pastry-dropbutton:hover .ephox-pastry-button, .ephox-polish-editor-container .ephox-pastry-dropbutton-active .ephox-pastry-dropbutton-button .ephox-pastry-button {color: #333 !important; background-color: #f5f5f5;}
+ */

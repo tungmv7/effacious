@@ -5,6 +5,7 @@ namespace eff\modules\file\controllers;
 use Yii;
 use eff\components\Controller;
 use yii\helpers\ArrayHelper;
+use yii\helpers\FileHelper;
 use yii\helpers\Json;
 
 /**
@@ -28,12 +29,46 @@ class AdminController extends Controller
         if (Yii::$app->request->isAjax) {
             $modelClass= $this->modelClass;
             $model = $modelClass::findOne($id);
-            $data = $model->attributes;
-            $data['date'] = date('d/m/Y H:i', $model->created_at);
 
-            echo Json::encode($data);
+            $file = [
+                'id' => $model->id,
+                'filename' => $model->filename,
+                'extension' => $model->extension,
+                'type' => $model->type,
+                'name' => $model->name,
+                'title' => $model->name,
+                'alt' => '',
+                'description' => $model->description,
+                'thumbnail' => $model->thumbnail,
+                'path' => $model->path,
+                'url' => Yii::$app->params['staticDomain'] . $model->url
+
+            ];
+            $file['date'] = date('d/m/Y', $model->created_at);
+
+            if (@unserialize($model->meta_data)) {
+                $rawData = unserialize($model->meta_data);
+                $metadata['size'] = self::convertFilesize($rawData['FileSize']);
+                if (isset($rawData["COMPUTED"]["Height"]) && isset($rawData["COMPUTED"]["Width"])) {
+                    $metadata['resolution'] = [
+                        'h' => $rawData['COMPUTED']['Height'],
+                        'w' => $rawData['COMPUTED']['Width']
+                    ];
+                }
+                $file['metadata'] = $metadata;
+            }
+
+            echo Json::encode($file);
 
         }
+    }
+
+    private static function convertFilesize($size)
+    {
+        $size = max(0, (int)$size);
+        $units = array( 'b', 'Kb', 'Mb', 'Gb', 'Tb', 'Pb', 'Eb', 'Zb', 'Yb');
+        $power = $size > 0 ? floor(log($size, 1024)) : 0;
+        return number_format($size / pow(1024, $power), 2, '.', ',') . ' ' .$units[$power];
     }
 
     public function actionEmbed()

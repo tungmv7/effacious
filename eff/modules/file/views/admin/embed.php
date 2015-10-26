@@ -252,9 +252,7 @@ $dropZoneEvenHandler = [
     ')
 ];
 $dropZoneOptions = [
-    'acceptedFiles' => implode(',', [
-        'image/*', 'video/*', 'audio/*', '.pdf', '.doc', '.xls', '.zip'
-    ])
+    'acceptedFiles' => implode(',', $acceptedFiles)
 ];
 
 $tabs = [];

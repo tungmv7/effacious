@@ -15,7 +15,7 @@ use \eff\components\ActiveForm;
         'id' => 'post-featured-image-modal',
         'header' => Html::tag('h4', 'Featured Image', ['class' => 'modal-title']),
         'footer' => Html::a('Close', '#', ['class' => 'btn', 'data-dismiss' => 'modal']) . "\n" . Html::a("Set featured image", 'javascript:;', ['class' => 'btn btn-primary btn-sm btn-set-featured-image']),
-        'embedParams' => ['isMultiple' => false]
+        'embedParams' => ['isMultiple' => false, 'acceptedFiles' => 'image/*']
     ]);
     $js = "
         $('.btn-set-featured-image').on('click', function(e) {
