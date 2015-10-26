@@ -22,12 +22,10 @@ use \eff\components\ActiveForm;
             var embedModalConfiguration = window[$(this).parents('.modal').data('handler')];
             if (Array.isArray(embedModalConfiguration.selectedItems) && embedModalConfiguration.selectedItems.length > 0) {
                 var item = embedModalConfiguration.selectedItems[0];
-                var size = embedModalConfiguration.attachmentSize;
-                var link = (size !== '0') ? item.url+'?w='+size : item.url;
-                var img = '<img src='+link+' />';
+                var attachment = embedModalConfiguration.getAttachment(item);
                 $('#".Html::getInputId($model, 'featured_image')."').val(item.id);
                 $('.featured-image-select').find('.default-image').hide();
-                $('.featured-image-select').find('.btn-choose-featured-image').attr('class', 'btn-choose-featured-image').html(img);
+                $('.featured-image-select').find('.btn-choose-featured-image').attr('class', 'btn-choose-featured-image').html(attachment);
                 $('#post-featured-image-modal').modal('toggle');
             }
         })
@@ -45,11 +43,9 @@ use \eff\components\ActiveForm;
             var embedModalConfiguration = window[$(this).parents('.modal').data('handler')];
             if (Array.isArray(embedModalConfiguration.selectedItems) && embedModalConfiguration.selectedItems.length > 0) {
                 embedModalConfiguration.selectedItems.forEach(function(item, index) {
-                    var size = embedModalConfiguration.attachmentSize;
-                    var link = (size !== '0') ? item.url+'?w='+size : item.url;
-                    var img = '<p><img src='+link+' /></p>';
+                    var attachment = embedModalConfiguration.getAttachment(item);
                     var redactorId = '".Html::getInputId($model, 'body')."';
-                    $('#'+redactorId).redactor('insert.html', img);
+                    $('#'+redactorId).redactor('insert.html', '<p>' + attachment + '</p>');
                 });
 
                 $('#post-media-modal').modal('toggle');

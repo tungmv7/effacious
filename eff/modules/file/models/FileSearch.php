@@ -6,6 +6,7 @@ use Yii;
 use yii\base\Model;
 use yii\data\ActiveDataProvider;
 use yii\helpers\Url;
+use yii\helpers\VarDumper;
 
 /**
  * FileSearch represents the model behind the search form about `eff\modules\filename\models\File`.
@@ -19,7 +20,7 @@ class FileSearch extends File
     {
         return [
             [['id', 'created_by', 'created_at', 'updated_by', 'updated_at', 'version', 'is_deleted'], 'integer'],
-            [['name', 'path', 'url', 'type', 'storage', 'thumbnail', 'filename', 'description', 'meta_data', 'deleted_at'], 'safe'],
+            [['name', 'path', 'url', 'type', 'storage', 'thumbnail', 'filename', 'extension', 'meta_data', 'deleted_at'], 'safe'],
         ];
     }
 
@@ -69,7 +70,6 @@ class FileSearch extends File
         $query->andFilterWhere(['like', 'name', $this->name])
             ->andFilterWhere(['like', 'path', $this->path])
             ->andFilterWhere(['like', 'url', $this->url])
-            ->andFilterWhere(['like', 'type', $this->type])
             ->andFilterWhere(['like', 'storage', $this->storage])
             ->andFilterWhere(['like', 'thumbnail', $this->thumbnail])
             ->andFilterWhere(['like', 'filename', $this->filename])
@@ -77,8 +77,11 @@ class FileSearch extends File
             ->andFilterWhere(['like', 'meta_data', $this->meta_data])
             ->andFilterWhere(['like', 'deleted_at', $this->deleted_at]);
 
-
-
+        $query->andFilterWhere([
+            'or',
+            ['or like', 'type', $this->type, false],
+            ['in', 'extension', $this->extension]
+        ]);
         return $dataProvider;
     }
 }

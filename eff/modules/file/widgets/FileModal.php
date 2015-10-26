@@ -6,6 +6,7 @@ use Yii;
 use yii\helpers\Html;
 use yii\helpers\Inflector;
 use yii\helpers\StringHelper;
+use yii\helpers\VarDumper;
 
 /**
  * Created by PhpStorm.
@@ -36,15 +37,22 @@ class FileModal extends \yii\bootstrap\Modal
         if (!isset($this->embedParams['withFromLink'])) {
             $this->embedParams['withFromLink'] = true;
         }
-        if (!isset($this->embedParams['allowedTypes'])) {
+        if (!isset($this->embedParams['acceptedFiles'])) {
             $this->embedParams['acceptedFiles'] = ['image/*', 'video/*', 'audio/*', '.doc', '.xls', '.pdf'];
         }
+
         if (!isset($this->embedParams['dataProvider']) && $this->embedParams['withLibrary']) {
             $searchModelClass = new \eff\modules\file\models\FileSearch();
 
             $params = Yii::$app->request->queryParams;
-            $params["File['type']"] = 'image/';
-
+            $acceptedFiles = (array) $this->embedParams['acceptedFiles'];
+            foreach($acceptedFiles as $temp) {
+                if (strpos($temp, '.') === 0) {
+                    $params["FileSearch"]["extension"][] = substr($temp, 1);
+                } else {
+                    $params["FileSearch"]["type"][] = substr($temp, 0, strlen($temp) - 1) . '%';
+                }
+            }
             $this->embedParams['dataProvider'] = $searchModelClass->search($params);
         }
         if (!isset($this->embedParams['objectHandlerFunctions'])) {

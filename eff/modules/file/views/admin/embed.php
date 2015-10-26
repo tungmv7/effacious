@@ -211,6 +211,15 @@ $jsConfig = new \yii\web\JsExpression('
                 sidebarContainer.hide().empty();
             }
         },
+        getAttachment: function(item) {
+            if (item.type.indexOf("image") === 0) {
+                var size = this.attachmentSize;
+                var link = (size !== "0") ? item.url+"?w="+size : item.url;
+                return "<img src=\""+link+"\" \/\>";
+            } else {
+                return "<a href=\""+item.url+"\">"+item.name+"</a>"
+            }
+        },
         request: function(key) {
             var objectHandler = this;
             var result;
@@ -252,7 +261,7 @@ $dropZoneEvenHandler = [
     ')
 ];
 $dropZoneOptions = [
-    'acceptedFiles' => implode(',', $acceptedFiles)
+    'acceptedFiles' => implode(',', (array)$acceptedFiles)
 ];
 
 $tabs = [];
