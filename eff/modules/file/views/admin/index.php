@@ -30,20 +30,11 @@ $this->params['breadcrumbs'][] = $this->title;
         'embedParams' => ['withLibrary' => false]
     ]);
     ?>
-
-    <?= $this->render('_search', ['model' => $searchModel]); ?>
-    <?php \yii\widgets\Pjax::begin(); ?>
-    <?= ListView::widget([
+    <?= $this->render("_browse", [
+        'reloadGrid' => 'files-index',
+        'searchModel' => $searchModel,
+        'pjaxUrl' => ['index'],
         'dataProvider' => $dataProvider,
-        'itemView' => '_item',
-        'itemOptions' => [
-            'tag' => 'li',
-            'class' => 'file-details',
-        ],
-        'options' => [
-            'tag' => 'ul',
-            'class' => 'file-wrapper'
-        ]
+        'objectHandlerFunctions' => 'files-index-modal'
     ]) ?>
-    <?php \yii\widgets\Pjax::end(); ?>
 </div>

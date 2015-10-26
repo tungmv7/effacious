@@ -9,19 +9,19 @@ use yii\widgets\ActiveForm;
 ?>
 
 <div class="post-search">
-
     <?php $form = ActiveForm::begin([
-        'action' => ['index'],
+        'action' => $pjaxUrl,
         'method' => 'get',
         'options' => [
-            'class' => 'form-inline'
+            'class' => 'form-inline',
+            'data-pjax' => true
         ]
     ]); ?>
 
             <div class="form-group">
                 <div class="input-group input-group-sm">
-                    <input type="text" class="form-control" placeholder="Keywords ...">
-                    <span class="input-group-btn">
+                    <?= Html::activeTextInput($model, 'name', ['class' => 'form-control', 'placeholder' => 'Keywords ...']) ?>
+                        <span class="input-group-btn">
                         <button class="btn btn-default" type="submit">
                             <i class="glyphicon glyphicon-search"></i> Search
                         </button>
@@ -55,5 +55,4 @@ use yii\widgets\ActiveForm;
             </div>
 
     <?php ActiveForm::end(); ?>
-
 </div>

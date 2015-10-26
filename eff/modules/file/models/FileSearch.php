@@ -77,11 +77,11 @@ class FileSearch extends File
             ->andFilterWhere(['like', 'meta_data', $this->meta_data])
             ->andFilterWhere(['like', 'deleted_at', $this->deleted_at]);
 
-        $query->andFilterWhere([
-            'or',
-            ['or like', 'type', $this->type, false],
-            ['in', 'extension', $this->extension]
-        ]);
+//        $query->andFilterWhere([
+//            'or',
+//            ['or like', 'type', explode(',', $this->type), false],
+//            ['in', 'extension', explode(',', $this->extension)]
+//        ]);
         return $dataProvider;
     }
 }

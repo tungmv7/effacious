@@ -3,6 +3,7 @@
 namespace eff\modules\post\controllers;
 
 use eff\components\Controller;
+use \Yii;
 
 /**
  * AdminController implements the CRUD actions for Post model.

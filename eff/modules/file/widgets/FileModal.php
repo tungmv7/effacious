@@ -5,8 +5,6 @@ namespace eff\modules\file\widgets;
 use Yii;
 use yii\helpers\Html;
 use yii\helpers\Inflector;
-use yii\helpers\StringHelper;
-use yii\helpers\VarDumper;
 
 /**
  * Created by PhpStorm.
@@ -21,45 +19,27 @@ class FileModal extends \yii\bootstrap\Modal
     public $options = ['class' => 'files-modal'];
 
     public $embedView = "@eff/modules/file/views/admin/embed";
-    public $embedParams = [];
+    public $params = [];
 
     public function init()
     {
         if (!isset($this->options['id'])) {
             $this->options['id'] = $this->getId();
         }
-        if (!isset($this->embedParams['isMultiple'])) {
-            $this->embedParams['isMultiple'] = true;
+        if (!isset($this->params['isMultiple'])) {
+            $this->params['isMultiple'] = true;
         }
-        if (!isset($this->embedParams['withLibrary'])) {
-            $this->embedParams['withLibrary'] = true;
+        if (!isset($this->params['withLibrary'])) {
+            $this->params['withLibrary'] = true;
         }
-        if (!isset($this->embedParams['withFromLink'])) {
-            $this->embedParams['withFromLink'] = true;
+        if (!isset($this->params['withFromLink'])) {
+            $this->params['withFromLink'] = false;
         }
-        if (!isset($this->embedParams['acceptedFiles'])) {
-            $this->embedParams['acceptedFiles'] = ['image/*', 'video/*', 'audio/*', '.doc', '.xls', '.pdf'];
+        if (!isset($this->params['acceptedFiles'])) {
+            $this->params['acceptedFiles'] = 'image/*,video/*,audio/*,.doc,.xls,.pdf,.zip';
         }
+        $this->params['objectHandlerFunctions'] = Inflector::slug($this->id . '-handler', '');
 
-        if (!isset($this->embedParams['dataProvider']) && $this->embedParams['withLibrary']) {
-            $searchModelClass = new \eff\modules\file\models\FileSearch();
-
-            $params = Yii::$app->request->queryParams;
-            $acceptedFiles = (array) $this->embedParams['acceptedFiles'];
-            foreach($acceptedFiles as $temp) {
-                if (strpos($temp, '.') === 0) {
-                    $params["FileSearch"]["extension"][] = substr($temp, 1);
-                } else {
-                    $params["FileSearch"]["type"][] = substr($temp, 0, strlen($temp) - 1) . '%';
-                }
-            }
-            $this->embedParams['dataProvider'] = $searchModelClass->search($params);
-        }
-        if (!isset($this->embedParams['objectHandlerFunctions'])) {
-            $this->embedParams['objectHandlerFunctions'] = uniqid("fileHandler");
-        }
-        $this->options['data-unique-id'] = Inflector::slug($this->id, '');
-        $this->options['data-handler'] = $this->embedParams['objectHandlerFunctions'];
         $this->initOptions();
         echo $this->renderToggleButton() . "\n";
         echo Html::beginTag('div', $this->options) . "\n";
@@ -72,8 +52,8 @@ class FileModal extends \yii\bootstrap\Modal
 
     public function run()
     {
-        $this->embedParams['modal'] = $this->id;
-        echo "\n" . $this->render($this->embedView, $this->embedParams);
+        $this->params['modal'] = $this->id . '-embed';
+        echo "\n" . $this->render($this->embedView, $this->params);
         echo "\n" . $this->renderBodyEnd();
         echo "\n" . $this->renderFooter();
         echo "\n" . Html::endTag('div'); // modal-content

@@ -15,11 +15,11 @@ use \eff\components\ActiveForm;
         'id' => 'post-featured-image-modal',
         'header' => Html::tag('h4', 'Featured Image', ['class' => 'modal-title']),
         'footer' => Html::a('Close', '#', ['class' => 'btn', 'data-dismiss' => 'modal']) . "\n" . Html::a("Set featured image", 'javascript:;', ['class' => 'btn btn-primary btn-sm btn-set-featured-image']),
-        'embedParams' => ['isMultiple' => false, 'acceptedFiles' => 'image/*']
+        'params' => ['isMultiple' => false, 'acceptedFiles' => 'image/*']
     ]);
     $js = "
         $('.btn-set-featured-image').on('click', function(e) {
-            var embedModalConfiguration = window[$(this).parents('.modal').data('handler')];
+            var embedModalConfiguration = window[$(this).parents('.modal').find('.eff-files').data('handler')];
             if (Array.isArray(embedModalConfiguration.selectedItems) && embedModalConfiguration.selectedItems.length > 0) {
                 var item = embedModalConfiguration.selectedItems[0];
                 var attachment = embedModalConfiguration.getAttachment(item);
@@ -36,11 +36,11 @@ use \eff\components\ActiveForm;
         'id' => 'post-media-modal',
         'header' => Html::tag('h4', 'Insert a media', ['class' => 'modal-title']),
         'footer' => Html::a('Close', '#', ['class' => 'btn', 'data-dismiss' => 'modal']) . "\n" . Html::a("Insert to post", 'javascript:;', ['class' => 'btn btn-primary btn-sm btn-insert-to-post']),
-        'embedParams' => ['isMultiple' => true]
+        'params' => ['isMultiple' => true]
     ]);
     $js = "
         $('.btn-insert-to-post').on('click', function(e) {
-            var embedModalConfiguration = window[$(this).parents('.modal').data('handler')];
+            var embedModalConfiguration = window[$(this).parents('.modal').find('.eff-files').data('handler')];
             if (Array.isArray(embedModalConfiguration.selectedItems) && embedModalConfiguration.selectedItems.length > 0) {
                 embedModalConfiguration.selectedItems.forEach(function(item, index) {
                     var attachment = embedModalConfiguration.getAttachment(item);

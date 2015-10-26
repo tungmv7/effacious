@@ -6,6 +6,7 @@ $filesTab = $modal . "-files-tab";
 $ajaxRequest = \yii\helpers\Url::toRoute('/file/admin/ajax');
 $staticDomain = Yii::$app->params['staticDomain'];
 $isMultiple = json_encode($isMultiple);
+$pjaxUrl = \yii\helpers\Url::toRoute(['/file/admin/embed', 'modal' => $modal, 'isMultiple' => $isMultiple, 'objectHandlerFunctions' => $objectHandlerFunctions, 'withLibrary' => $withLibrary, 'withFromLink' => $withFromLink, 'acceptedFiles' => $acceptedFiles]);
 $jsConfig = new \yii\web\JsExpression('
     var '.$objectHandlerFunctions.' = {
         modal: "' . $modal . '",
@@ -255,7 +256,7 @@ $dropZoneEvenHandler = [
                 }
             });
             $("#" + '.$objectHandlerFunctions.'.selectedItemContainer).val(ids.join(","));
-            $.pjax.reload({container: "#" + '.$objectHandlerFunctions.'.reloadGrid});
+            $.pjax.reload({container: "#" + '.$objectHandlerFunctions.'.reloadGrid, push: false, replace: false, url: "'.$pjaxUrl.'"});
             this.removeAllFiles(e);
         }
     ')
@@ -270,21 +271,38 @@ $tabs[] = [
     'content' => $this->render("_form", ['modal' => $modal, 'dropZoneEvenHandler' => $dropZoneEvenHandler, 'dropZoneOptions' => $dropZoneOptions]),
     'options' => ['id' => $uploadTab]
 ];
-if ($withLibrary) {
+
+if ($withLibrary === true) {
+    if (!isset($dataProvider)) {
+        $dataProvider = new \yii\data\ArrayDataProvider();
+        $jsOnLoad = '$.pjax.reload({container: "#" + '.$objectHandlerFunctions.'.reloadGrid, push: false, replace: false, url: "'.$pjaxUrl.'"});';
+        $this->registerJs($jsOnLoad);
+    }
+    if (!isset($searchModel)) {
+        $searchModel = new \eff\modules\file\models\FileSearch();
+    }
     $tabs[] = [
         'label' => 'Library',
-        'content' => $this->render("_browse", ['objectHandlerFunctions' => $objectHandlerFunctions, 'dataProvider' => $dataProvider, 'modal' => $modal, 'reloadGrid' => $reloadGrid]),
+        'content' => $this->render("_browse", [
+            'objectHandlerFunctions' => $objectHandlerFunctions,
+            'dataProvider' => $dataProvider,
+            'modal' => $modal, 'reloadGrid' => $reloadGrid,
+            'searchModel' => $searchModel,
+            'pjaxUrl' => $pjaxUrl
+        ]),
         'options' => ['id' => $filesTab]
     ];
 }
-if ($withFromLink) {
+if ($withFromLink === true) {
     $tabs[] = [
         'label' => 'Upload a Link',
         'content' => 'Get link feature => later'
     ];
 }
+echo \yii\helpers\Html::beginTag('div', ['class' => 'eff-files', 'id' => $modal, 'data-handler' => $objectHandlerFunctions]);
 echo \yii\bootstrap\Tabs::widget([
     'navType' => 'nav-pills nav-goog-tabs',
     'itemOptions' => ['style' => 'margin: 15px 0;'],
     'items' => $tabs
 ]);
+echo \yii\helpers\Html::endTag('div');
