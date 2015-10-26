@@ -15,13 +15,16 @@ use \eff\components\ActiveForm;
         'id' => 'post-featured-image-modal',
         'header' => Html::tag('h4', 'Featured Image', ['class' => 'modal-title']),
         'footer' => Html::a('Close', '#', ['class' => 'btn', 'data-dismiss' => 'modal']) . "\n" . Html::a("Set featured image", 'javascript:;', ['class' => 'btn btn-primary btn-sm btn-set-featured-image']),
-        'embedParams' => ['selectMode' => 'single']
+        'embedParams' => ['isMultiple' => false]
     ]);
     $js = "
         $('.btn-set-featured-image').on('click', function(e) {
+            var embedModalConfiguration = window[$(this).parents('.modal').data('handler')];
             if (Array.isArray(embedModalConfiguration.selectedItems) && embedModalConfiguration.selectedItems.length > 0) {
                 var item = embedModalConfiguration.selectedItems[0];
-                var img = '<img src='+embedModalConfiguration.staticDomain+item.url+' />';
+                var size = embedModalConfiguration.attachmentSize;
+                var link = (size !== '0') ? item.url+'?w='+size : item.url;
+                var img = '<img src='+link+' />';
                 $('#".Html::getInputId($model, 'featured_image')."').val(item.id);
                 $('.featured-image-select').find('.default-image').hide();
                 $('.featured-image-select').find('.btn-choose-featured-image').attr('class', 'btn-choose-featured-image').html(img);
@@ -31,18 +34,30 @@ use \eff\components\ActiveForm;
     ";
     $this->registerJs($js, \yii\web\View::POS_END);
 
+    echo eff\modules\file\widgets\FileModal::widget([
+        'id' => 'post-media-modal',
+        'header' => Html::tag('h4', 'Insert a media', ['class' => 'modal-title']),
+        'footer' => Html::a('Close', '#', ['class' => 'btn', 'data-dismiss' => 'modal']) . "\n" . Html::a("Insert to post", 'javascript:;', ['class' => 'btn btn-primary btn-sm btn-insert-to-post']),
+        'embedParams' => ['isMultiple' => true]
+    ]);
+    $js = "
+        $('.btn-insert-to-post').on('click', function(e) {
+            var embedModalConfiguration = window[$(this).parents('.modal').data('handler')];
+            if (Array.isArray(embedModalConfiguration.selectedItems) && embedModalConfiguration.selectedItems.length > 0) {
+                embedModalConfiguration.selectedItems.forEach(function(item, index) {
+                    var size = embedModalConfiguration.attachmentSize;
+                    var link = (size !== '0') ? item.url+'?w='+size : item.url;
+                    var img = '<p><img src='+link+' /></p>';
+                    var redactorId = '".Html::getInputId($model, 'body')."';
+                    $('#'+redactorId).redactor('insert.html', img);
+                });
 
-//    echo eff\modules\file\widgets\FileModal::widget([
-//        'id' => 'post-media-modal',
-//        'header' => Html::tag('h4', 'Insert a media', ['class' => 'modal-title']),
-//        'footer' => Html::a('Close', '#', ['class' => 'btn', 'data-dismiss' => 'modal']) . "\n" . Html::a("Insert to post", 'javascript:;', ['class' => 'btn btn-primary btn-sm btn-insert-to-post'])
-//    ]);
-//    $js = "
-//        $('.btn-insert-to-post').on('click', function(e) {
-//            $('.filpost-media-modal').modal('toggle');
-//        })
-//    ";
-//    $this->registerJs($js);
+                $('#post-media-modal').modal('toggle');
+            }
+        })
+    ";
+    $this->registerJs($js, \yii\web\View::POS_END);
+
     ?>
 
     <?php $form = ActiveForm::begin(); ?>
@@ -105,6 +120,36 @@ use \eff\components\ActiveForm;
 
         // post body - content
         echo $form->beginField($model, 'body');
+//        echo \eff\widgets\textboxio\TextboxIO::widget([
+//            'model' => $model,
+//            'attribute' => 'body',
+//            'clientOptions' => [
+//                'ui' => [
+//                    'toolbar' => [
+//                        'items' => [
+//                            [
+//                                'label' => 'Insert group',
+//                                'items' => [
+//                                    [
+//                                        'id' => 'media',
+//                                        'text' => 'Insert media',
+//                                        'action' => 'function(){alert("Custom Button 1 Clicked");}'
+//                                    ],
+//                                    'media', 'link', 'table', 'specialchar', 'hr'
+//                                ]
+//                            ],
+//                            'undo', 'style', 'emphasis', 'align', 'listindent', 'format', 'tools'
+//                        ]
+//                    ],
+//                ],
+//                'paste' => [
+//                    'style' => 'clean'
+//                ],
+//                'images' => [
+//                    'allowLocal' => false
+//                ]
+//            ]
+//        ]);
         echo \eff\widgets\redactor\Redactor::widget([
             'model' => $model,
             'attribute' => 'body',
@@ -206,7 +251,7 @@ use \eff\components\ActiveForm;
                     <div class="featured-image-select">
                         <a class="default-image"><i class="glyphicon glyphicon-picture"></i></a>
                         <?= Html::activeHiddenInput($model, 'featured_image') ?>
-                        <?= Html::a(Yii::t('post', 'Choose featured image'), '#', ['class' => 'btn btn-primary btn-xs btn-choose-featured-image', 'data-toggle' => 'modal', 'data-target' => '.files-modal']) ?>
+                        <?= Html::a(Yii::t('post', 'Choose featured image'), '#', ['class' => 'btn btn-primary btn-xs btn-choose-featured-image', 'data-toggle' => 'modal', 'data-target' => '#post-featured-image-modal']) ?>
                     </div>
                 </div>
             </div>
