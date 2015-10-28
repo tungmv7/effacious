@@ -1,5 +1,5 @@
 <div class="file-wrapper">
-<?php \yii\widgets\Pjax::begin(['id' => $reloadGrid, 'enablePushState' => false]); ?>
+<?php \yii\widgets\Pjax::begin(['id' => $reloadGrid, 'enablePushState' => false, 'enableReplaceState' => false, 'timeout' => $pjaxTimeout]); ?>
 <?= $this->render("_search", ['model' => $searchModel, 'pjaxUrl' => $pjaxUrl])?>
 <?= \eff\components\ListView::widget([
     'dataProvider' => $dataProvider,
@@ -11,7 +11,9 @@
     'options' => [
         'tag' => 'ul',
         'class' => 'file-wrapper-thumbs'
-    ]
+    ],
+    'emptyText' => \yii\helpers\Html::tag('div', 'No items found.', ['class' => 'centered']),
+    'emptyTextOptions' => ['class' => 'empty file-empty']
 ]) ?>
 </div>
 <?= $this->render("_sidebar") ?>
@@ -22,6 +24,10 @@ $js = "
 
         // bind required fields
         $('#' + ".$objectHandlerFunctions.".filesTab).append('<input id=\"'+".$objectHandlerFunctions.".selectedItemContainer+'\" type=\"hidden\"/>');
+
+        $('#".$reloadGrid."').on('pjax:start', function(e, options) {
+            $(this).find('.loading-indicator').show();
+        });
 
         // bind on pjax completed and end
         $('#".$reloadGrid."').on('pjax:end', function(e, options) {
@@ -35,6 +41,7 @@ $js = "
             });
             $('#' + ".$objectHandlerFunctions.".modal + \" a[href='#\"+".$objectHandlerFunctions.".filesTab+\"']\").tab('show');
             ".$objectHandlerFunctions.".bindItemJs();
+            $(this).find('.loading-indicator').hide();
         });
     ";
 $this->registerJs($js);

@@ -8,7 +8,7 @@ use yii\helpers\Html;
 class Alert extends Widget
 {
     public $closeButton = [];
-
+    public $timeout = 5000;
     public $types = [
         'error' => ['alert-danger', 'glyphicon glyphicon-exclamation-sign'],
         'success' => ['alert-success', 'glyphicon glyphicon-ok-circle'],
@@ -39,5 +39,11 @@ class Alert extends Widget
                 $session->removeFlash($type);
             }
         }
+
+        $js = "
+        setTimeout(function() {
+            $('#".$this->id."').fadeOut();
+        }, ".$this->timeout.");";
+        $this->getView()->registerJs($js);
     }
 }

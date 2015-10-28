@@ -55,8 +55,7 @@ use \eff\components\ActiveForm;
     $this->registerJs($js, \yii\web\View::POS_END);
 
     ?>
-
-    <?php $form = ActiveForm::begin(); ?>
+    <?php $form = ActiveForm::begin();?>
     <div class="col-md-12">
         <?= \eff\widgets\Alert::widget() ?>
         <?= $form->errorSummary($model); ?>
@@ -247,6 +246,38 @@ use \eff\components\ActiveForm;
                     <div class="featured-image-select">
                         <a class="default-image"><i class="glyphicon glyphicon-picture"></i></a>
                         <?= Html::activeHiddenInput($model, 'featured_image') ?>
+                        <?php
+                            $js = "
+                                function postBindFeaturedImage() {
+
+                                    var fileId = $('#".Html::getInputId($model, 'featured_image')."').val();
+                                    var featuredImage = '';
+                                    if (!isNaN(fileId)){
+                                        $.ajax({
+                                            url: '".\yii\helpers\Url::toRoute('/file/admin/ajax')."?id=' + fileId,
+                                            type: 'jsonp',
+                                            async: false,
+                                            success: function(e) {
+                                                featuredImage = JSON.parse(e);
+                                            },
+                                            error: function(e) {
+                                                featuredImage = false;
+                                            }
+                                        });
+                                    }
+                                    if (featuredImage != false) {
+                                        var size = 300;
+                                        var link = featuredImage.url+'?w='+size;
+                                        var attachment =  '<img src=\"'+link+'\" />';
+                                        $('.featured-image-select').find('.default-image').hide();
+                                        $('.featured-image-select').find('.btn-choose-featured-image').attr('class', 'btn-choose-featured-image').html(attachment);
+                                    }
+                                }
+                                postBindFeaturedImage();
+                            ";
+                            $this->registerJs($js);
+
+                        ?>
                         <?= Html::a(Yii::t('post', 'Choose featured image'), '#', ['class' => 'btn btn-primary btn-xs btn-choose-featured-image', 'data-toggle' => 'modal', 'data-target' => '#post-featured-image-modal']) ?>
                     </div>
                 </div>
@@ -346,7 +377,7 @@ use \eff\components\ActiveForm;
         </div>
 
     </div>
-</div>
     <?php ActiveForm::end(); ?>
+</div>
 
 

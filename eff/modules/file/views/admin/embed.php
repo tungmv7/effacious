@@ -1,5 +1,6 @@
 <?php
 // common
+$pjaxTimeout = 20000;
 $reloadGrid = $modal . "-file-library-pjax";
 $uploadTab = $modal . "-upload-tab";
 $filesTab = $modal . "-files-tab";
@@ -31,7 +32,7 @@ $jsConfig = new \yii\web\JsExpression('
                     html +=     "<div class=\"media-left media-top\">";
 
                     if (extension == "image"){
-                        html +=         "<a href=\"javascript:;\">";
+                        html +=         "<a href=\"javascript:;\" class=\"file-image-mini\">";
                         html +=             "<img class=\"media-object file-thumb\" src=\"{fileUrl}\">";
                         html +=         "</a>";
                     } else {
@@ -48,24 +49,25 @@ $jsConfig = new \yii\web\JsExpression('
 
             } else if (mode == "public") {
                 var html = "";
-                    html += "<div class=\"form-horizontal\">";
+                    html += "<form class=\"form-horizontal file-editable-fields\">";
                     html +=     "<div class=\"form-group form-group-sm\">";
                     html +=         "<label class=\"col-sm-3 control-label\">Url</label>";
                     html +=         "<div class=\"col-sm-9\"><input type=\"text\" readonly class=\"form-control\" value=\"{fileUrl}\"  placeholder=\"Url\"></div>";
                     html +=     "</div>";
                     html +=     "<div class=\"form-group form-group-sm\">";
                     html +=         "<label class=\"col-sm-3 control-label\">Title</label>";
-                    html +=         "<div class=\"col-sm-9\"><input type=\"text\" class=\"form-control title\" value=\"{fileTitle}\" placeholder=\"Title\"></div>";
+                    html +=         "<div class=\"col-sm-9\"><input type=\"text\" class=\"form-control input-editable-custom title\" name=\"title\" value=\"{fileTitle}\" placeholder=\"Title\"></div>";
                     html +=     "</div>";
                     html +=     "<div class=\"form-group form-group-sm\">";
                     html +=         "<label class=\"col-sm-3 control-label\">Alt</label>";
-                    html +=         "<div class=\"col-sm-9\"><input type=\"text\" class=\"form-control alt\" value=\"{fileAlt}\" placeholder=\"Alt\"></div>";
+                    html +=         "<div class=\"col-sm-9\"><input type=\"text\" class=\"form-control input-editable-custom alt\" name=\"alt\" value=\"{fileAlt}\" placeholder=\"Alt\"></div>";
                     html +=     "</div>";
                     html +=     "<div class=\"form-group form-group-sm\">";
                     html +=         "<label class=\"col-sm-3 control-label\">Description</label>";
-                    html +=         "<div class=\"col-sm-9\"><textarea class=\"form-control description\" value=\"{fileDescription}\" placeholder=\"Description\"></textarea></div>";
+                    html +=         "<div class=\"col-sm-9\"><textarea class=\"form-control input-editable-custom description\" name=\"description\" placeholder=\"Description\">{fileDescription}</textarea></div>";
                     html +=     "</div>";
-                    html += "</div>";
+                    html +=     "<div class=\"loading-indicator\" style=\"display:none;\"><img src=\"/img/oval.svg\" width=\"20\"> Saving ...</div>";
+                    html += "</form>";
                 return "<div class=\"file-public-info\">" + html + "</div>";
             } else if (mode == "settings") {
                 var html = "";
@@ -193,9 +195,9 @@ $jsConfig = new \yii\web\JsExpression('
             if (mode == "show") {
                 var customExtension = raw.type.indexOf("image") === 0 ? "image" : raw.extension;
                 if (customExtension == "image") {
-                    var fileDetails = "<strong>" + raw.filename + "</strong>" + "<br />Created at " + raw.date + "<br />" + raw.metadata.size + " - " + raw.metadata.resolution.w + "x" + raw.metadata.resolution.h;
+                    var fileDetails = "<strong>" + raw.name + "</strong>" + "<br />Created at " + raw.date + "<br />" + raw.metadata.size + " - " + raw.metadata.resolution.w + "x" + raw.metadata.resolution.h;
                 } else {
-                    var fileDetails = "<strong>" + raw.filename + "</strong>" + "<br />Created at " + raw.date + "<br />" + raw.metadata.size;
+                    var fileDetails = "<strong>" + raw.name + "</strong>" + "<br />Created at " + raw.date + "<br />" + raw.metadata.size;
                 }
                 var basicInfo = this.template("basic", customExtension).replaceAll("{fileID}", raw.id).replaceAll("{fileUrl}", raw.url + "?w=150").replaceAll("{fileInfo}", fileDetails);
                 var publicInfo = this.template("public").replaceAll("{fileUrl}", raw.url + "?w=150").replaceAll("{fileTitle}", raw.title).replaceAll("{fileAlt}", raw.alt).replaceAll("{fileDescription}", raw.description);
@@ -208,6 +210,42 @@ $jsConfig = new \yii\web\JsExpression('
                     });
                 }
                 sidebarContainer.show();
+
+                $("#" + obj.modal + " .file-sidebar .file-info a.file-image-mini").on("click", function(e) {
+                    var wrapper = $("#" + obj.modal + " .file-wrapper");
+                    var grid = $("#" + obj.modal + " #" + obj.reloadGrid);
+                    console.log(wrapper);
+                    console.log(grid);
+                    if (grid.hasClass("hidden")) {
+                        grid.removeClass("hidden");
+                        wrapper.find(".file-image-fullsize").remove();
+                        console.log(e);
+                    } else {
+                        wrapper.prepend("<div class=\"file-image-fullsize\"><div><img src=\""+raw.url+"\" /></div></div>");
+                        grid.addClass("hidden");
+                        console.log(e);
+                    }
+                    console.log(grid.hasClass("hidden"));
+                });
+
+                $("#" + this.modal +" .file-sidebar .file-info .file-editable-fields .input-editable-custom").on("change", function(e) {
+                    var loadingIndicator = $(this).parents(".file-editable-fields").find(".loading-indicator");
+                    var formData = $(this).parents(".file-editable-fields").serialize();
+                    formData += "&' . Yii::$app->request->csrfParam . '=' . Yii::$app->request->csrfToken . '";
+                    $.ajax({
+                        url: obj.ajaxRequestUrl + "?mode=update&id=" + raw.id,
+                        type: "jsonp",
+                        data: formData,
+                        type: "POST",
+                        beforeSend: function(e) {
+                            loadingIndicator.fadeIn();
+                        },
+                        complete: function(e) {
+                            loadingIndicator.fadeOut("slow");
+                        }
+                    });
+                });
+
             } else {
                 sidebarContainer.hide().empty();
             }
@@ -256,13 +294,13 @@ $dropZoneEvenHandler = [
                 }
             });
             $("#" + '.$objectHandlerFunctions.'.selectedItemContainer).val(ids.join(","));
-            $.pjax.reload({container: "#" + '.$objectHandlerFunctions.'.reloadGrid, push: false, replace: false, url: "'.$pjaxUrl.'"});
+            $.pjax.reload({container: "#" + '.$objectHandlerFunctions.'.reloadGrid, push: false, replace: false, timeout: '.$pjaxTimeout.', url: "'.$pjaxUrl.'"});
             this.removeAllFiles(e);
         }
     ')
 ];
 $dropZoneOptions = [
-    'acceptedFiles' => implode(',', (array)$acceptedFiles)
+    'acceptedFiles' => implode(',', (array) $acceptedFiles)
 ];
 
 $tabs = [];
@@ -275,7 +313,11 @@ $tabs[] = [
 if ($withLibrary === true) {
     if (!isset($dataProvider)) {
         $dataProvider = new \yii\data\ArrayDataProvider();
-        $jsOnLoad = '$.pjax.reload({container: "#" + '.$objectHandlerFunctions.'.reloadGrid, push: false, replace: false, url: "'.$pjaxUrl.'"});';
+        $jsOnLoad = '
+        $("a[href=\"#'.$filesTab.'\"]").on("show.bs.tab", function (e) {
+            $.pjax.reload({container: "#" + '.$objectHandlerFunctions.'.reloadGrid, push: false, replace: false, timeout: '.$pjaxTimeout.', url: "'.$pjaxUrl.'"});
+        });
+        ';
         $this->registerJs($jsOnLoad);
     }
     if (!isset($searchModel)) {
@@ -288,7 +330,8 @@ if ($withLibrary === true) {
             'dataProvider' => $dataProvider,
             'modal' => $modal, 'reloadGrid' => $reloadGrid,
             'searchModel' => $searchModel,
-            'pjaxUrl' => $pjaxUrl
+            'pjaxUrl' => $pjaxUrl,
+            'pjaxTimeout' => $pjaxTimeout
         ]),
         'options' => ['id' => $filesTab]
     ];

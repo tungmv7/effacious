@@ -4,10 +4,12 @@ namespace eff\modules\file\controllers;
 
 use Yii;
 use eff\components\Controller;
+use yii\base\DynamicModel;
 use yii\helpers\ArrayHelper;
 use yii\helpers\FileHelper;
 use yii\helpers\Inflector;
 use yii\helpers\Json;
+use yii\helpers\VarDumper;
 
 /**
  * Class AdminController
@@ -28,39 +30,66 @@ class AdminController extends Controller
     public function actionAjax($id)
     {
         if (Yii::$app->request->isAjax) {
-            $modelClass = $this->modelClass;
-            $model = $modelClass::findOne($id);
 
-            $file = [
-                'id' => $model->id,
-                'filename' => $model->filename,
-                'extension' => $model->extension,
-                'type' => $model->type,
-                'name' => $model->name,
-                'title' => $model->name,
-                'alt' => '',
-                'description' => $model->description,
-                'thumbnail' => $model->thumbnail,
-                'path' => $model->path,
-                'url' => Yii::$app->params['staticDomain'] . $model->url
+            $mode = Yii::$app->request->get('mode', 'get');
 
-            ];
-            $file['date'] = date('d/m/Y', $model->created_at);
+            if ($mode === 'update' && Yii::$app->request->isPost) {
 
-            if (@unserialize($model->meta_data)) {
-                $rawData = unserialize($model->meta_data);
-                $metadata['size'] = self::convertFilesize($rawData['FileSize']);
-                if (isset($rawData["COMPUTED"]["Height"]) && isset($rawData["COMPUTED"]["Width"])) {
-                    $metadata['resolution'] = [
-                        'h' => $rawData['COMPUTED']['Height'],
-                        'w' => $rawData['COMPUTED']['Width']
-                    ];
+                $title = Yii::$app->request->post('title', '');
+                $alt = Yii::$app->request->post('alt', '');
+                $description = Yii::$app->request->post('description', '');
+                $fileInfo = DynamicModel::validateData(compact('title', 'alt', 'description'),[
+                    [['title', 'alt', 'description'], 'string', 'max' => '255']
+                ]);
+
+                if (!$fileInfo->hasErrors()) {
+                    $modelClass = $this->modelClass;
+                    $model = $modelClass::findOne($id);
+
+                    foreach($fileInfo->attributes as $k => $v) {
+                        $model->$k = $v;
+                    }
+                    echo Json::encode($model->save());
                 }
-                $file['metadata'] = $metadata;
+            } else {
+
+                $modelClass = $this->modelClass;
+                $model = $modelClass::findOne($id);
+
+                $url = Yii::$app->params['staticDomain'] . $model->url;
+                if (strpos($model->type, 'image') === 0) {
+                    $url = Yii::$app->params['staticDomain'] . '/resize' . $model->url;
+                }
+                $file = [
+                    'id' => $model->id,
+                    'name' => $model->name,
+                    'extension' => $model->extension,
+                    'type' => $model->type,
+                    'origin' => $model->origin,
+                    'title' => $model->title,
+                    'alt' => !empty($model->alt) ? $model->alt : '',
+                    'description' => !empty($model->description) ? $model->description : '',
+                    'thumbnail' => !empty($model->thumbnail) ? $model->thumbnail : '',
+                    'path' => $model->path,
+                    'url' => $url
+
+                ];
+                $file['date'] = date('d/m/Y', $model->created_at);
+
+                if (@unserialize($model->meta_data)) {
+                    $rawData = unserialize($model->meta_data);
+                    $metadata['size'] = self::convertFilesize($rawData['FileSize']);
+                    if (isset($rawData["COMPUTED"]["Height"]) && isset($rawData["COMPUTED"]["Width"])) {
+                        $metadata['resolution'] = [
+                            'h' => $rawData['COMPUTED']['Height'],
+                            'w' => $rawData['COMPUTED']['Width']
+                        ];
+                    }
+                    $file['metadata'] = $metadata;
+                }
+
+                echo Json::encode($file);
             }
-
-            echo Json::encode($file);
-
         }
     }
 
@@ -88,7 +117,7 @@ class AdminController extends Controller
         // query to db
         $searchModel = new $modelSearchClass();
         $params = Yii::$app->request->queryParams;
-        $acceptedFiles = explode(',', $acceptedFiles);
+        $acceptedFiles = is_array($acceptedFiles) ? $acceptedFiles : explode(',', $acceptedFiles);
         $extension = [];
         $type = [];
         foreach($acceptedFiles as $temp) {
@@ -106,7 +135,7 @@ class AdminController extends Controller
 
         $dataProvider = $searchModel->search($params);
 
-        $acceptedFiles = ['image/*', 'video/*', 'audio/*', '.doc', '.xls', '.pdf'];
+        // $acceptedFiles = ['image/*', 'video/*', 'audio/*', '.doc', '.xls', '.pdf'];
 
         return $this->render('embed', [
             'modal' => $modal,

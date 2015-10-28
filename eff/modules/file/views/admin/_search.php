@@ -17,7 +17,9 @@ use yii\widgets\ActiveForm;
             'data-pjax' => true
         ]
     ]); ?>
-
+            <div class="loading-indicator" style="display: none;">
+                <img src="/img/oval.svg" width="20"/>
+            </div>
             <div class="form-group">
                 <div class="input-group input-group-sm">
                     <?= Html::activeTextInput($model, 'name', ['class' => 'form-control', 'placeholder' => 'Keywords ...']) ?>

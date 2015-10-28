@@ -92,8 +92,9 @@ class Upload extends Action
                     $fileDb->loadDefaultValues();
                     $fileDb->path = $this->afterUploadData['path'];
                     $fileDb->url = $this->afterUploadData['url'];
-                    $fileDb->filename = $this->afterUploadData['file']['name'];
-                    $fileDb->name = $this->afterUploadData['file']['baseName'];
+                    $fileDb->name = $this->afterUploadData['file']['name'];
+                    $fileDb->origin = $this->afterUploadData['path'];
+                    $fileDb->title = $this->afterUploadData['file']['baseName'];
                     $fileDb->type = $this->afterUploadData['file']['type'];
                     $fileDb->extension = $this->afterUploadData['file']['extension'];
                     $fileDb->meta_data = $this->afterUploadData['file']['metadata'];

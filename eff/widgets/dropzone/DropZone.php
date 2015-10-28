@@ -36,9 +36,11 @@ class DropZone extends Widget
         Html::addCssClass($this->messageOptions, 'dz-message');
         $this->dropzoneName = 'dropzone_' . Inflector::slug($this->id, '_');
         if (empty($this->message)) {
-            $msg = Html::tag('div', 'Drop files here', ['class' => 'drop-file']) .
-                Html::tag('label', 'OR', ['class' => 'drop-or']) .
-                Html::tag('div', 'Choose files to upload', ['class' => 'btn btn-default btn-xs']);
+            $msg = Html::tag('div', 'Drop files here to upload', ['class' => 'drop-file']) .
+                Html::tag('label', 'or', ['class' => 'drop-or']) .
+                Html::tag('div', 'Select files', ['class' => 'btn btn-primary drop-btn']).
+                Html::tag('p', 'Allowed file types: jpg, jpeg, png, gif, pdf, doc, ppt, odt, pptx, docx, pps, ppsx, xls, xlsx, key', ['class' => 'drop-file-types']).
+                Html::tag('p', 'Maximum upload file size: 1 GB.', ['class' => 'drop-file-size']);
             $this->message = Html::tag('div', Html::tag('div', $msg, ['class' => 'centered']), ['class' => 'dz-inner-message']);
         }
     }

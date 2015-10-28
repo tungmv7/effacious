@@ -143,7 +143,7 @@ body {
 /*form-control*/
 .form-control {border-radius: 0; height: 40px; transition: none; box-shadow: none; -webkit-transition: none; -webkit-box-shadow: none;}
 .form-control.input-sm {height: 30px;}
-
+.form-inline .loading-indicator {margin: 0; padding: 8px; display: inline-block;}
 /*radio list*/
 .radio-list label {display: block;}
 
@@ -198,6 +198,11 @@ ul.nav-goog-tabs {border-bottom: 1px solid #e1e1e1;}
 .file-dropzone .dz-message .dz-inner-message .centered{transform:translate(-50%,-50%)}
 
 /*file media thumbnail*/
+.file-wrapper .file-image-fullsize {position: absolute; top: 0; bottom: 0; left: 0; right: 300px;}
+.file-wrapper .file-image-fullsize:after {content: ""; position: absolute; top: 0; bottom: 0; left: 0; right:0; opacity: 0.5 ;background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQAQMAAAAlPW0iAAAAA3NCSVQICAjb4U/gAAAABlBMVEXMzMz////TjRV2AAAACXBIWXMAAArrAAAK6wGCiw1aAAAAHHRFWHRTb2Z0d2FyZQBBZG9iZSBGaXJld29ya3MgQ1M26LyyjAAAABFJREFUCJlj+M/AgBVhF/0PAH6/D/HkDxOGAAAAAElFTkSuQmCC);}
+.file-wrapper .file-image-fullsize > div{position: absolute; text-align: center;  top: 0; bottom: 0; left: 0; right:0;  z-index: 2;}
+.file-wrapper .file-image-fullsize > div img {height: 100%;}
+
 .file-wrapper-thumbs {margin: 0; padding: 0;}
 .file-wrapper-thumbs .file-details {float: left; margin: 8px 8px; list-style: none; width:12.5%; border: 1px solid #ddd; background-color: #f5f5f5; position: relative;}
 .file-wrapper-thumbs .file-details.active {box-shadow: 0 0 0 3px #e1e1e1; cursor: pointer;}
@@ -216,7 +221,8 @@ ul.nav-goog-tabs {border-bottom: 1px solid #e1e1e1;}
 .file-wrapper-thumbs .file-details.active .check-sign{background-color: #e1e1e1; padding: 3px; border: 1px solid #ddd; color: #777; }
 .file-wrapper-thumbs .file-details.selected .check-sign{background-color: #1e8cbe; padding: 3px; border: 1px solid #1e8cbe; color: #fff; }
 .file-wrapper-thumbs .file-details.active .check-sign, .file-wrapper-thumbs .file-details.selected .check-sign {display: block;}
-
+.file-wrapper-thumbs .file-empty {position: absolute; top: 0; left: 0; bottom: 0; right: 0; text-align: center; transform: translate(50%,50%);}
+.file-wrapper-thumbs .file-empty .centered {position: absolute; transform: translate(-50%, -50%); font-size: 28px; color: #777; margin-bottom: 10px;}
 /*files modal*/
 .files-modal .modal-dialog {width: auto; position: fixed; top: 30px; left: 30px; right: 30px; bottom: 30px; height: auto; margin: 0; padding: 0;}
 .files-modal .modal-dialog .modal-content {position: relative; height: 100%; width: 100%; margin: 0; padding: 0;}
@@ -252,6 +258,7 @@ ul.nav-goog-tabs {border-bottom: 1px solid #e1e1e1;}
 
 .file-info .file-public-info .form-horizontal .form-group .control-label,
 .file-info .file-settings-info .form-horizontal .form-group .control-label{font-size: 11px; padding-right: 0; padding-left: 2px; text-align: right; color: #777;}
+.file-info .file-public-info .loading-indicator {margin: 10px; display: block; font-size: 11px; line-height: 20px;}
 
 /*editor temp
 .ephox-polish-editor-container, .ephox-polish-source-container {border-color: #ccc !important;}

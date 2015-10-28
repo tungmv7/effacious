@@ -8,7 +8,7 @@ if (strpos($model->type, 'image') === 0) {
     echo Html::tag('div', $file, ['class' => 'file-thumbnail']);
     echo Html::tag('span', '', ['class' => 'glyphicon glyphicon-ok check-sign']);
 } else {
-    $fileName = Html::tag('span', $model->filename, ['class' => 'file-name']);
+    $fileName = Html::tag('span', $model->name, ['class' => 'file-name']);
     if (strpos($model->type, 'video') === 0) {
         $icon = 'glyphicon glyphicon-film';
     } else if (strpos($model->type, 'audio') === 0) {

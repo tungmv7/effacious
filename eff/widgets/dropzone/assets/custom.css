@@ -1,3 +1,6 @@
 .dropzone {border: 4px dashed #ccc}
-.dropzone .dz-message .drop-file {font-size: 28px; color: #ccc; margin-bottom: 10px;}
+.dropzone .dz-message .drop-file {font-size: 28px; color: #777; margin-bottom: 10px;}
 .dropzone .dz-message .drop-or {margin:5px auto 10px; color: #ccc; display: block;}
+.dropzone .dz-message .drop-file-types {color: #777; padding: 15px 0; margin: 15px 0 0 0;}
+.dropzone .dz-message .drop-file-size {color: #777; padding: 0 0 15px 0; margin: 0;}
+.dropzone .dz-message .drop-btn {padding: 10px 30px;}

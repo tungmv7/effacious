@@ -24,17 +24,18 @@ $this->params['breadcrumbs'][] = $this->title;
     </div>
 
     <?php
-    echo FileModal::widget([
-        'id' => 'file_index_modal',
-        'header' => Html::tag('h4', 'Insert new file', ['class' => 'modal-title']),
-        'embedParams' => ['withLibrary' => false]
-    ]);
+//    echo FileModal::widget([
+//        'id' => 'file_index_modal',
+//        'header' => Html::tag('h4', 'Insert new file', ['class' => 'modal-title']),
+//        'embedParams' => ['withLibrary' => false]
+//    ]);
     ?>
     <?= $this->render("_browse", [
         'reloadGrid' => 'files-index',
         'searchModel' => $searchModel,
         'pjaxUrl' => ['index'],
         'dataProvider' => $dataProvider,
-        'objectHandlerFunctions' => 'files-index-modal'
+        'objectHandlerFunctions' => 'files-index-modal',
+        'pjaxTimeout' => 20000
     ]) ?>
 </div>
