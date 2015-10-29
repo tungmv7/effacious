@@ -58,7 +58,7 @@ class AdminController extends Controller
 
                 $url = Yii::$app->params['staticDomain'] . $model->url;
                 if (strpos($model->type, 'image') === 0) {
-                    $url = Yii::$app->params['staticDomain'] . '/resize' . $model->url;
+                    $url = Yii::$app->params['staticDomain'] . $model->url;
                 }
                 $file = [
                     'id' => $model->id,
