@@ -210,22 +210,19 @@ $jsConfig = new \yii\web\JsExpression('
                     });
                 }
                 sidebarContainer.show();
+                var wrapper = $("#" + obj.modal + " .file-wrapper");
+                var grid = $("#" + obj.modal + " #" + obj.reloadGrid);
+                wrapper.find(".file-image-fullsize").remove();
+                grid.removeClass("hidden");
 
                 $("#" + obj.modal + " .file-sidebar .file-info a.file-image-mini").on("click", function(e) {
-                    var wrapper = $("#" + obj.modal + " .file-wrapper");
-                    var grid = $("#" + obj.modal + " #" + obj.reloadGrid);
-                    console.log(wrapper);
-                    console.log(grid);
                     if (grid.hasClass("hidden")) {
                         grid.removeClass("hidden");
                         wrapper.find(".file-image-fullsize").remove();
-                        console.log(e);
                     } else {
                         wrapper.prepend("<div class=\"file-image-fullsize\"><div><img src=\""+raw.url+"\" /></div></div>");
                         grid.addClass("hidden");
-                        console.log(e);
                     }
-                    console.log(grid.hasClass("hidden"));
                 });
 
                 $("#" + this.modal +" .file-sidebar .file-info .file-editable-fields .input-editable-custom").on("change", function(e) {

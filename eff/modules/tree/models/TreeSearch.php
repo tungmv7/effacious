@@ -1,12 +1,16 @@
 <?php
 
-namespace eff\modules\file\models;
+namespace eff\modules\tree\models;
 
 use Yii;
 use yii\base\Model;
 use yii\data\ActiveDataProvider;
+use eff\modules\tree\models\Tree;
 
-class FileSearch extends File
+/**
+ * TreeSearch represents the model behind the search form about `eff\modules\tree\models\Tree`.
+ */
+class TreeSearch extends Tree
 {
     /**
      * @inheritdoc
@@ -14,8 +18,8 @@ class FileSearch extends File
     public function rules()
     {
         return [
-            [['id', 'created_by', 'created_at', 'updated_by', 'updated_at', 'version', 'is_deleted'], 'integer'],
-            [['title', 'path', 'url', 'type', 'storage', 'thumbnail', 'name', 'extension', 'meta_data', 'deleted_at'], 'safe'],
+            [['id', 'tree', 'lft', 'rgt', 'depth', 'created_by', 'created_at', 'updated_by', 'updated_at', 'version', 'is_deleted'], 'integer'],
+            [['name', 'icon', 'url', 'title', 'description', 'deleted_at'], 'safe'],
         ];
     }
 
@@ -37,11 +41,10 @@ class FileSearch extends File
      */
     public function search($params)
     {
-        $query = File::find()->orderBy('created_at desc');
+        $query = Tree::find();
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
-            'pagination' => ['pageSize' => 100]
         ]);
 
         $this->load($params);
@@ -54,6 +57,10 @@ class FileSearch extends File
 
         $query->andFilterWhere([
             'id' => $this->id,
+            'tree' => $this->tree,
+            'lft' => $this->lft,
+            'rgt' => $this->rgt,
+            'depth' => $this->depth,
             'created_by' => $this->created_by,
             'created_at' => $this->created_at,
             'updated_by' => $this->updated_by,
@@ -63,23 +70,12 @@ class FileSearch extends File
         ]);
 
         $query->andFilterWhere(['like', 'name', $this->name])
-            ->andFilterWhere(['like', 'path', $this->path])
+            ->andFilterWhere(['like', 'icon', $this->icon])
             ->andFilterWhere(['like', 'url', $this->url])
-            ->andFilterWhere(['like', 'storage', $this->storage])
-            ->andFilterWhere(['like', 'thumbnail', $this->thumbnail])
             ->andFilterWhere(['like', 'title', $this->title])
-            ->andFilterWhere(['like', 'alt', $this->alt])
             ->andFilterWhere(['like', 'description', $this->description])
-            ->andFilterWhere(['like', 'meta_data', $this->meta_data])
             ->andFilterWhere(['like', 'deleted_at', $this->deleted_at]);
 
-        if (!empty($this->type ) || !empty($this->extension )) {
-            $query->andFilterWhere([
-                'or',
-                ['or like', 'type', explode(',', $this->type), false],
-                ['in', 'extension', explode(',', $this->extension)]
-            ]);
-        }
         return $dataProvider;
     }
 }

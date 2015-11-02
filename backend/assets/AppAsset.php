@@ -30,6 +30,6 @@ class AppAsset extends AssetBundle
         'yii\bootstrap\BootstrapAsset',
     ];
     public $jsOptions = [
-        'position' => View::POS_END
+        'position' => View::POS_HEAD
     ];
 }

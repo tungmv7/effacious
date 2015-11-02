@@ -31,6 +31,7 @@ class Controller extends \yii\web\Controller
             ['label' => \Yii::t('admin', 'Manage Modules'), 'url' => ['/module']],
             ['label' => \Yii::t('admin', 'Manage Posts'), 'url' => ['/post']],
             ['label' => \Yii::t('admin', 'Manage Files'), 'url' => ['/file']],
+            ['label' => \Yii::t('admin', 'Manage Tree'), 'url' => ['/tree']],
         ];
     }
 

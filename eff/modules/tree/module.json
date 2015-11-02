@@ -1,0 +1,11 @@
+{
+  "id": "tree",
+  "name": "Tree Module",
+  "class": "eff\\modules\\tree\\Module",
+  "isCore": false,
+  "description": "This generator helps you to generate the skeleton code needed by a Eff module.",
+  "keywords": [
+    "tree"
+  ],
+  "version": "1.0.0"
+}

@@ -23,19 +23,19 @@ $this->params['breadcrumbs'][] = $this->title;
         </h3>
     </div>
 
-    <?php
-//    echo FileModal::widget([
-//        'id' => 'file_index_modal',
-//        'header' => Html::tag('h4', 'Insert new file', ['class' => 'modal-title']),
-//        'embedParams' => ['withLibrary' => false]
-//    ]);
-    ?>
-    <?= $this->render("_browse", [
-        'reloadGrid' => 'files-index',
-        'searchModel' => $searchModel,
-        'pjaxUrl' => ['index'],
+    <?= $this->render("_search", ['model' => $searchModel, 'pjaxUrl' => ['index']])?>
+    <?= \eff\components\ListView::widget([
         'dataProvider' => $dataProvider,
-        'objectHandlerFunctions' => 'files-index-modal',
-        'pjaxTimeout' => 20000
+        'itemView' => '_item',
+        'itemOptions' => [
+            'tag' => 'li',
+            'class' => 'file-details',
+        ],
+        'options' => [
+            'tag' => 'ul',
+            'class' => 'file-wrapper-thumbs'
+        ],
+        'emptyText' => \yii\helpers\Html::tag('div', 'No items found.', ['class' => 'centered']),
+        'emptyTextOptions' => ['class' => 'empty file-empty']
     ]) ?>
 </div>
